@@ -22,7 +22,7 @@ public class CloseItemMenuAction extends Action {
 
 	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
 		this.editorTableView = editorTableView;
-		setText("Close and Remove");
+		setText("Close");
 	}
 
 	@Override
