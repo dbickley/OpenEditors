@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Open Editors
-Bundle-SymbolicName: com.deepnoodle.OpenEditors;singleton:=true
+Bundle-SymbolicName: com.deepnoodle.openeditors;singleton:=true
 Bundle-Version: 0.91
 Bundle-Vendor: deepnoodle
 Automatic-Module-Name: OpenEditors
