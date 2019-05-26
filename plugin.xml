@@ -11,7 +11,7 @@
       </category>
       <view
             name="Open Editors"
-            icon="icons/deepnoodle.ico"
+            icon="icons/resource_persp.png"
             category="deepnoodle"
             class="com.deepnoodle.openeditors.views.openeditors.OpenEditorsMainView"
             id="EditorsView">
