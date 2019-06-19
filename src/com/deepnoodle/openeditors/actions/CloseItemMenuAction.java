@@ -22,6 +22,7 @@ public class CloseItemMenuAction extends Action {
 
 	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
 		this.editorTableView = editorTableView;
+		this.site = site;
 		setText("Close");
 	}
 
