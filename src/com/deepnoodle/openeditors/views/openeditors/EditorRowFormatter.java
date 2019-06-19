@@ -1,7 +1,6 @@
 package com.deepnoodle.openeditors.views.openeditors;
 
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableItem;
 
@@ -12,10 +11,23 @@ import com.deepnoodle.openeditors.services.SettingsService;
 public class EditorRowFormatter {
 
 	private static LogWrapper log = new LogWrapper(EditorTableView.class);
-
-	private SettingsService settingsService = SettingsService.getInstance();
-
 	private static EditorRowFormatter instance;
+
+	private SettingsService settingsService;
+
+	private Color dirtyColor;
+	private Color pinnedColor;
+	private Color highlightColor;
+	private Color closedColor;
+
+	private EditorRowFormatter() {
+		settingsService = SettingsService.getInstance();
+
+		dirtyColor = new Color(Display.getCurrent(), settingsService.getDirtyColor());
+		pinnedColor = new Color(Display.getCurrent(), settingsService.getPinnedColor());
+		highlightColor = new Color(Display.getCurrent(), settingsService.getHighlightColor());
+		closedColor = new Color(Display.getCurrent(), settingsService.getClosedColor());
+	}
 
 	public static EditorRowFormatter getInstance() {
 		if (instance == null) {
@@ -25,20 +37,11 @@ public class EditorRowFormatter {
 	}
 
 	public void formatRows(TableItem[] items, IEditor activeEditor, Color forgroundColor, Color backgroundColor) {
-
-		Color dirtyColor = new Color(Display.getCurrent(), settingsService.getDirtyColor());
-		Color pinnedColor = new Color(Display.getCurrent(), settingsService.getPinnedColor());
-		Color highlightColor = new Color(Display.getCurrent(), settingsService.getHighlightColor());
-
-		//TODO move to settings
-		Color closedColor = new Color(Display.getCurrent(), new RGB(130, 130, 130));
-
 		for (TableItem item : items) {
 			try {
 				IEditor editor = ((IEditor) item.getData());
 				if (editor.isPinned()) {
 					item.setForeground(pinnedColor);
-					//item.setFont(new F);
 				} else if (!editor.isOpened()) {
 					item.setForeground(closedColor);
 				} else if (editor.isDirty()) {

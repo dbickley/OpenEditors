@@ -2,12 +2,10 @@ package com.deepnoodle.openeditors.views.openeditors;
 
 import javax.annotation.PostConstruct;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.ViewPart;
 
 import com.deepnoodle.openeditors.actions.SortAction;
@@ -18,20 +16,18 @@ public class OpenEditorsMainView extends ViewPart {
 
 	private EditorTableView editorTableView;
 
+	private PartListener partListener;
+	
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
 
-		final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
-
 		//Build the editor view
 		editorTableView = new EditorTableView(parent, getSite(), getViewSite());
 
-		PartListener listener = new PartListener(editorTableView);
-		workbenchWindow.getPartService().addPartListener(listener);
-
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(listener);
-
+		partListener = new PartListener(editorTableView);
+		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
+		
 		//EditorSetComboControl editorSetComboControl = new EditorSetComboControl(editorTableView);
 
 //		Action loadSetAction = new ManageSetsAction(editorSetComboControl);
@@ -70,7 +66,12 @@ public class OpenEditorsMainView extends ViewPart {
 	@Override
 	public void setFocus() {
 		// Do nothing
-
 	}
 
+	@Override
+	public void dispose() {
+		// Remove all listeners
+		getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
+		editorTableView.dispose();
+	}
 }

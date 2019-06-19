@@ -1,12 +1,10 @@
 package com.deepnoodle.openeditors.views.openeditors;
 
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
 
-public class PartListener implements IPartListener, IResourceChangeListener {
+public class PartListener implements IPartListener {
 	private EditorTableView editorTableView;
 
 	public PartListener(EditorTableView editorTableView) {
@@ -45,12 +43,7 @@ public class PartListener implements IPartListener, IResourceChangeListener {
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
-		//Do nothing
+		// Do nothing
+		editorTableView.setActivePart(null);
 	}
-
-	@Override
-	public void resourceChanged(IResourceChangeEvent event) {
-		//editorTableView.refresh();
-	}
-
 }

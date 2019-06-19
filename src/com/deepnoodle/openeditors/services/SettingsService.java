@@ -135,6 +135,10 @@ public class SettingsService {
 		return getOrCreateSettings().getHighlightColor();
 	}
 
+	public RGB getClosedColor() {
+		return getOrCreateSettings().getClosedColor();
+	}
+	
 	public EditorSetSettingsModel getActiveEditorSettingsSet() {
 		return getOrCreateSettings().getActiveEditorSettingsSet();
 	}

@@ -2,14 +2,18 @@ package com.deepnoodle.openeditors.views.openeditors;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -21,9 +25,20 @@ import com.deepnoodle.openeditors.models.editor.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 
-public class EditorTableView implements IDoubleClickListener {
+public class EditorTableView implements MouseListener, IPropertyListener {
+	
 	private static LogWrapper log = new LogWrapper(EditorTableView.class);
 
+	/**
+	 * Value of MouseEvent.button that represents a left mouse button.
+	 */
+	private static final int LEFT_MOUSE_BUTTON = 1;
+	
+	/**
+	 * Value of MouseEvent.button that represents a middle mouse button.
+	 */
+	private static final int MIDDLE_MOUSE_BUTTON = 2;
+	
 	private SettingsService settingsService = SettingsService.getInstance();
 
 	private EditorRowFormatter editorRowFormatter = EditorRowFormatter.getInstance();
@@ -36,7 +51,7 @@ public class EditorTableView implements IDoubleClickListener {
 	private EditorComparator editorComparator;
 
 	private IEditor activeEditor;
-
+	
 	private EditorItemMenuManager menuManager;
 
 	public EditorTableView(Composite parent, IWorkbenchPartSite site, IViewSite iViewSite) {
@@ -52,8 +67,8 @@ public class EditorTableView implements IDoubleClickListener {
 		tableViewer.setLabelProvider(new EditorViewLabelProvider());
 		tableViewer.setInput(iViewSite);
 
-		tableViewer.addDoubleClickListener(this);
-
+		tableViewer.getControl().addMouseListener(this);
+		
 		menuManager = new EditorItemMenuManager(this, site, parent);
 		tableViewer.getTable().setMenu(menuManager.createContextMenu(parent));
 
@@ -74,23 +89,11 @@ public class EditorTableView implements IDoubleClickListener {
 			log.warn(e);
 		}
 	}
-
+	
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		editorComparator.setSortBy(sortBy);
 		settingsService.getActiveEditorSettingsSet().setSortBy(sortBy);
 		refresh();
-	}
-
-	@Override
-	public void doubleClick(DoubleClickEvent event) {
-		List<IEditor> editors = getSelections();
-		for (IEditor editor : editors) {
-			try {
-				openEditorService.openEditor(editor, site);
-			} catch (Exception e) {
-				log.warn(e);
-			}
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -111,19 +114,118 @@ public class EditorTableView implements IDoubleClickListener {
 	}
 
 	public void setActivePart(IWorkbenchPart activePart) {
+		if(activePart == null) {
+			setActiveEditor(null);
+			return;
+		}
+		
 		TableItem[] items = tableViewer.getTable().getItems();
 		for (TableItem item : items) {
 			IEditor editor = ((IEditor) item.getData());
 			if (editor.isOpened()
 					&& editor.getReference() != null
 					&& editor.getReference().getPart(false) == activePart) {
-				activeEditor = editor;
+				setActiveEditor(editor);
 			}
 		}
 	}
 
+	private void setActiveEditor(IEditor editor) {
+		if(activeEditor != null) {
+			activeEditor.getReference().removePropertyListener(this);
+		}
+		activeEditor = editor;
+		if(activeEditor != null) {
+			activeEditor.getReference().addPropertyListener(this);
+		}
+	}
+	
 	public IWorkbenchPartSite getSite() {
 		return site;
 	}
 
+	@Override
+	public void propertyChanged(Object source, int eventCode) {
+		switch(eventCode) {
+		case ISaveablePart.PROP_DIRTY : {
+			onEditorDirtyChanged(source);
+			break;
+		}
+		}
+	}
+	
+	private void onEditorDirtyChanged(Object source) {
+		refresh();
+	}
+	
+	public void dispose() {
+		// Remove listener on active editor
+		setActiveEditor(null);
+	}
+	
+	public void mouseDoubleClick(MouseEvent e) {
+		// Open file with double left-mouse-button.
+		if(e.button != LEFT_MOUSE_BUTTON) {
+			return;
+		}
+		
+		IEditor clickedEditor = getClickedEditor(e);
+		if(clickedEditor != null) {
+			openEditor(clickedEditor);
+		}
+	}
+
+	@Override
+	public void mouseDown(MouseEvent e) {
+		// Do nothing
+	}
+
+	@Override
+	public void mouseUp(MouseEvent e) {
+		// Open file with left-mouse-button.
+		// Close file with middle-mouse-button.
+		switch(e.button) {
+			case LEFT_MOUSE_BUTTON : {
+				IEditor clickedEditor = getClickedEditor(e);
+				if(clickedEditor != null) {
+					openEditor(clickedEditor);
+				}
+				break;
+			}
+			
+			case MIDDLE_MOUSE_BUTTON : {
+				IEditor clickedEditor = getClickedEditor(e);
+				if(clickedEditor != null) {
+					closeEditor(clickedEditor);
+				}
+				break;
+			}
+		}
+	}
+
+	private IEditor getClickedEditor(MouseEvent e) {
+		Point clickedPoint = new Point(e.x, e.y);
+		ViewerCell clickedCell = tableViewer.getCell(clickedPoint);
+		if(clickedCell == null) {
+			return null;
+		}
+		IEditor clickedEditor = (IEditor) clickedCell.getElement();
+		return clickedEditor;
+	}
+	
+	private void closeEditor(IEditor editor) {
+		try {
+			openEditorService.closeEditor(editor, site);
+		} catch (Exception e) {
+			log.warn(e);
+		}
+	}
+
+	private void openEditor(IEditor editor) {
+		try {
+			openEditorService.openEditor(editor, site);
+		} catch (Exception e) {
+			log.warn(e);
+		}
+	}
 }
