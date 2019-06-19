@@ -12,7 +12,12 @@ class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvid
 
 	@Override
 	public String getColumnText(Object obj, int index) {
-		return getText(obj);
+		IEditor editor = ((IEditor) obj);
+		if (editor.isDirty()) {
+			return "*"+getText(obj);
+		} else {
+			return getText(obj);
+		}
 	}
 
 	@Override
