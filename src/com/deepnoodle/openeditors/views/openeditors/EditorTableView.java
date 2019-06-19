@@ -2,11 +2,13 @@ package com.deepnoodle.openeditors.views.openeditors;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TableItem;
@@ -23,9 +25,20 @@ import com.deepnoodle.openeditors.models.editor.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 
-public class EditorTableView implements IDoubleClickListener, IPropertyListener {
+public class EditorTableView implements MouseListener, IPropertyListener {
+	
 	private static LogWrapper log = new LogWrapper(EditorTableView.class);
 
+	/**
+	 * Value of MouseEvent.button that represents a left mouse button.
+	 */
+	private static final int LEFT_MOUSE_BUTTON = 1;
+	
+	/**
+	 * Value of MouseEvent.button that represents a middle mouse button.
+	 */
+	private static final int MIDDLE_MOUSE_BUTTON = 2;
+	
 	private SettingsService settingsService = SettingsService.getInstance();
 
 	private EditorRowFormatter editorRowFormatter = EditorRowFormatter.getInstance();
@@ -54,8 +67,8 @@ public class EditorTableView implements IDoubleClickListener, IPropertyListener 
 		tableViewer.setLabelProvider(new EditorViewLabelProvider());
 		tableViewer.setInput(iViewSite);
 
-		tableViewer.addDoubleClickListener(this);
-
+		tableViewer.getControl().addMouseListener(this);
+		
 		menuManager = new EditorItemMenuManager(this, site, parent);
 		tableViewer.getTable().setMenu(menuManager.createContextMenu(parent));
 
@@ -81,18 +94,6 @@ public class EditorTableView implements IDoubleClickListener, IPropertyListener 
 		editorComparator.setSortBy(sortBy);
 		settingsService.getActiveEditorSettingsSet().setSortBy(sortBy);
 		refresh();
-	}
-
-	@Override
-	public void doubleClick(DoubleClickEvent event) {
-		List<IEditor> editors = getSelections();
-		for (IEditor editor : editors) {
-			try {
-				openEditorService.openEditor(editor, site);
-			} catch (Exception e) {
-				log.warn(e);
-			}
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -160,5 +161,71 @@ public class EditorTableView implements IDoubleClickListener, IPropertyListener 
 	public void dispose() {
 		// Remove listener on active editor
 		setActiveEditor(null);
+	}
+	
+	public void mouseDoubleClick(MouseEvent e) {
+		// Open file with double left-mouse-button.
+		if(e.button != LEFT_MOUSE_BUTTON) {
+			return;
+		}
+		
+		IEditor clickedEditor = getClickedEditor(e);
+		if(clickedEditor != null) {
+			openEditor(clickedEditor);
+		}
+	}
+
+	@Override
+	public void mouseDown(MouseEvent e) {
+		// Do nothing
+	}
+
+	@Override
+	public void mouseUp(MouseEvent e) {
+		// Open file with left-mouse-button.
+		// Close file with middle-mouse-button.
+		switch(e.button) {
+			case LEFT_MOUSE_BUTTON : {
+				IEditor clickedEditor = getClickedEditor(e);
+				if(clickedEditor != null) {
+					openEditor(clickedEditor);
+				}
+				break;
+			}
+			
+			case MIDDLE_MOUSE_BUTTON : {
+				IEditor clickedEditor = getClickedEditor(e);
+				if(clickedEditor != null) {
+					closeEditor(clickedEditor);
+				}
+				break;
+			}
+		}
+	}
+
+	private IEditor getClickedEditor(MouseEvent e) {
+		Point clickedPoint = new Point(e.x, e.y);
+		ViewerCell clickedCell = tableViewer.getCell(clickedPoint);
+		if(clickedCell == null) {
+			return null;
+		}
+		IEditor clickedEditor = (IEditor) clickedCell.getElement();
+		return clickedEditor;
+	}
+	
+	private void closeEditor(IEditor editor) {
+		try {
+			openEditorService.closeEditor(editor, site);
+		} catch (Exception e) {
+			log.warn(e);
+		}
+	}
+
+	private void openEditor(IEditor editor) {
+		try {
+			openEditorService.openEditor(editor, site);
+		} catch (Exception e) {
+			log.warn(e);
+		}
 	}
 }
