@@ -14,6 +14,7 @@ public class SettingsModel {
 	private RGB highlightColor = new RGB(219, 219, 219);
 	private RGB pinnedColor = new RGB(60, 15, 175);
 	private RGB dirtyColor = new RGB(204, 0, 0);
+	private RGB closedColor = new RGB(130, 130, 130);
 
 	private String activeSetName = Constants.OPEN_EDITORS_SET_NAME;
 
@@ -32,7 +33,15 @@ public class SettingsModel {
 	public void setHighlightColor(RGB highlightColor) {
 		this.highlightColor = highlightColor;
 	}
-
+	
+	public RGB getClosedColor() {
+		return closedColor;
+	}
+	
+	public void setClosedColor(RGB closedColor) {
+		this.closedColor = closedColor;
+	}
+	
 	public RGB getPinnedColor() {
 		return pinnedColor;
 	}
