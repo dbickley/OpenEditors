@@ -2,7 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-
     <extension
          point="org.eclipse.ui.views">
       <category
@@ -11,13 +10,11 @@
       </category>
       <view
             name="Open Editors"
-            icon="icons/resource_persp.png"
+            icon="icons/open_editors_view_icon.png"
             category="deepnoodle"
             class="com.deepnoodle.openeditors.views.openeditors.OpenEditorsMainView"
             id="EditorsView">
       </view>
    </extension> 
-
-   
 
 </plugin>
