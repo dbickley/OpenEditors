@@ -12,6 +12,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.IPropertyListener;
+import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -23,7 +25,8 @@ import com.deepnoodle.openeditors.models.editor.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 
-public class EditorTableView implements MouseListener {
+public class EditorTableView implements MouseListener, IPropertyListener {
+	
 	private static LogWrapper log = new LogWrapper(EditorTableView.class);
 
 	/**
@@ -48,7 +51,7 @@ public class EditorTableView implements MouseListener {
 	private EditorComparator editorComparator;
 
 	private IEditor activeEditor;
-
+	
 	private EditorItemMenuManager menuManager;
 
 	public EditorTableView(Composite parent, IWorkbenchPartSite site, IViewSite iViewSite) {
@@ -86,7 +89,7 @@ public class EditorTableView implements MouseListener {
 			log.warn(e);
 		}
 	}
-
+	
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		editorComparator.setSortBy(sortBy);
 		settingsService.getActiveEditorSettingsSet().setSortBy(sortBy);
@@ -111,22 +114,55 @@ public class EditorTableView implements MouseListener {
 	}
 
 	public void setActivePart(IWorkbenchPart activePart) {
+		if(activePart == null) {
+			setActiveEditor(null);
+			return;
+		}
+		
 		TableItem[] items = tableViewer.getTable().getItems();
 		for (TableItem item : items) {
 			IEditor editor = ((IEditor) item.getData());
 			if (editor.isOpened()
 					&& editor.getReference() != null
 					&& editor.getReference().getPart(false) == activePart) {
-				activeEditor = editor;
+				setActiveEditor(editor);
 			}
 		}
 	}
 
+	private void setActiveEditor(IEditor editor) {
+		if(activeEditor != null) {
+			activeEditor.getReference().removePropertyListener(this);
+		}
+		activeEditor = editor;
+		if(activeEditor != null) {
+			activeEditor.getReference().addPropertyListener(this);
+		}
+	}
+	
 	public IWorkbenchPartSite getSite() {
 		return site;
 	}
 
 	@Override
+	public void propertyChanged(Object source, int eventCode) {
+		switch(eventCode) {
+		case ISaveablePart.PROP_DIRTY : {
+			onEditorDirtyChanged(source);
+			break;
+		}
+		}
+	}
+	
+	private void onEditorDirtyChanged(Object source) {
+		refresh();
+	}
+	
+	public void dispose() {
+		// Remove listener on active editor
+		setActiveEditor(null);
+	}
+	
 	public void mouseDoubleClick(MouseEvent e) {
 		// Open file with double left-mouse-button.
 		if(e.button != LEFT_MOUSE_BUTTON) {
