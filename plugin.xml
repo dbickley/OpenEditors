@@ -9,12 +9,24 @@
             id="deepnoodle">
       </category>
       <view
-            name="Open Editors"
-            icon="icons/open_editors_view_icon.png"
             category="deepnoodle"
             class="com.deepnoodle.openeditors.views.openeditors.OpenEditorsMainView"
-            id="EditorsView">
+            icon="icons/open_editors_view_icon.png"
+            id="com.deepnoodle.openeditors.view"
+            name="Open Editors">
       </view>
    </extension> 
+   
+   <extension point="org.eclipse.ui.bindings">
+  <key
+     commandId="org.eclipse.ui.views.showView"
+     schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+     sequence="M1+M2+M3+E">
+     <parameter
+          id="org.eclipse.ui.views.showView.viewId"
+          value="com.deepnoodle.openeditors.view">
+     </parameter>
+ </key>
+</extension>
 
 </plugin>
