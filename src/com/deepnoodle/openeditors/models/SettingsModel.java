@@ -1,9 +1,8 @@
-package com.deepnoodle.openeditors.models.settings;
+package com.deepnoodle.openeditors.models;
 
 import org.eclipse.swt.graphics.RGB;
 
-import com.deepnoodle.openeditors.Constants;
-import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 
 public class SettingsModel {
 
@@ -12,8 +11,6 @@ public class SettingsModel {
 	private RGB pinnedColor = new RGB(60, 15, 175);
 	private RGB dirtyColor = new RGB(204, 0, 0);
 	private RGB closedColor = new RGB(130, 130, 130);
-
-	private String activeSetName = Constants.OPEN_EDITORS_SET_NAME;
 
 	private SortType sortBy = SortType.ACCESS;
 
@@ -50,14 +47,6 @@ public class SettingsModel {
 
 	public void setDirtyColor(RGB dirtyColor) {
 		this.dirtyColor = dirtyColor;
-	}
-
-	public String getActiveSetName() {
-		return activeSetName;
-	}
-
-	public void setActiveSetName(String currentSetName) {
-		activeSetName = currentSetName;
 	}
 
 	public SortType getSortBy() {

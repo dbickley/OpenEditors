@@ -1,11 +1,10 @@
-package com.deepnoodle.openeditors.services;
+package com.deepnoodle.openeditors.persistence;
 
 import org.eclipse.swt.graphics.RGB;
 
-import com.deepnoodle.openeditors.daos.SettingsDao;
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
-import com.deepnoodle.openeditors.models.settings.SettingsModel;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
+import com.deepnoodle.openeditors.models.SettingsModel;
 
 public class SettingsService {
 	private static LogWrapper log = new LogWrapper(SettingsService.class);
@@ -48,14 +47,6 @@ public class SettingsService {
 
 	public RGB getClosedColor() {
 		return getOrCreateSettings().getClosedColor();
-	}
-	
-	public String getActiveSetName() {
-		return getOrCreateSettings().getActiveSetName();
-	}
-
-	public void setActiveSetName(String name) {
-		getOrCreateSettings().setActiveSetName(name);
 	}
 	
 	public SortType getSortBy() {

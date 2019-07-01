@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.models.editor;
+package com.deepnoodle.openeditors.models;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;

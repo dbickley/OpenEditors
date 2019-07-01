@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import javax.annotation.PostConstruct;
 
@@ -8,10 +8,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
-import com.deepnoodle.openeditors.actions.SortAction;
-import com.deepnoodle.openeditors.models.editor.EditorComparator;
+import com.deepnoodle.openeditors.models.EditorComparator;
+import com.deepnoodle.openeditors.ui.actions.SortAction;
 
-//TODO clean this up
 public class OpenEditorsMainView extends ViewPart {
 
 	private EditorTableView editorTableView;
@@ -21,22 +20,10 @@ public class OpenEditorsMainView extends ViewPart {
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
-
-		//Build the editor view
 		editorTableView = new EditorTableView(parent, getSite(), getViewSite());
-
 		partListener = new PartListener(editorTableView);
 		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
-		
-		//EditorSetComboControl editorSetComboControl = new EditorSetComboControl(editorTableView);
 
-//		Action loadSetAction = new ManageSetsAction(editorSetComboControl);
-//		Action saveSetAction = new SaveSetAction(editorSetComboControl);
-//
-//		Action sortByAccessAction = new SortAction(editorTableView,
-//				EditorComparator.SortType.ACCESS,
-//				"Sort by Last Access",
-//				"Sorts the tabs by last access using eclipse navigation history");
 		Action sortByNameAction = new SortAction(editorTableView,
 				EditorComparator.SortType.NAME,
 				"Sort by Name",
@@ -50,17 +37,6 @@ public class OpenEditorsMainView extends ViewPart {
 		IMenuManager menuManager = bars.getMenuManager();
 		menuManager.add(sortByNameAction);
 		menuManager.add(sortByPathAction);
-
-		//TODO fix and add back in
-		//menuManager.add(sortByAccessAction);
-
-		//TODO fix and add back in
-		//		IToolBarManager toolbarManager = bars.getToolBarManager();
-		//
-		//		toolbarManager.add(editorSetComboControl);
-		//		toolbarManager.add(loadSetAction);
-		//		toolbarManager.add(saveSetAction);
-
 	}
 
 	@Override

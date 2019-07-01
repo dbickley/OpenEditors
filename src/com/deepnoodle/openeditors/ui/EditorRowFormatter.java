@@ -1,12 +1,12 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.IEditor;
-import com.deepnoodle.openeditors.services.SettingsService;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.persistence.SettingsService;
 
 public class EditorRowFormatter {
 

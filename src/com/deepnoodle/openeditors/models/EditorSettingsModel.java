@@ -1,9 +1,7 @@
-package com.deepnoodle.openeditors.models.settings;
+package com.deepnoodle.openeditors.models;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorReference;
-
-import com.deepnoodle.openeditors.models.editor.IEditor;
 
 //TODO change name, it's not just settings
 public class EditorSettingsModel implements IEditor {

@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;

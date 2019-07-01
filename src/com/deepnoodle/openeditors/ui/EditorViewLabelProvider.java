@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import com.deepnoodle.openeditors.models.editor.IEditor;
+import com.deepnoodle.openeditors.models.IEditor;
 
 class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 

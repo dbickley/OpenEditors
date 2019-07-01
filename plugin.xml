@@ -10,7 +10,7 @@
       </category>
       <view
             category="deepnoodle"
-            class="com.deepnoodle.openeditors.views.openeditors.OpenEditorsMainView"
+            class="com.deepnoodle.openeditors.ui.OpenEditorsMainView"
             icon="icons/open_editors_view_icon.png"
             id="com.deepnoodle.openeditors.view"
             name="Open Editors">

@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.daos;
+package com.deepnoodle.openeditors.persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 
 import com.deepnoodle.openeditors.Activator;
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.settings.SettingsModel;
+import com.deepnoodle.openeditors.models.SettingsModel;
 import com.google.gson.GsonBuilder;
 
 public class SettingsDao {

@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.actions;
+package com.deepnoodle.openeditors.ui.actions;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.IEditor;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
-import com.deepnoodle.openeditors.views.openeditors.EditorTableView;
+import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class OpenItemMenuAction extends Action {
 	private static LogWrapper log = new LogWrapper(OpenItemMenuAction.class);

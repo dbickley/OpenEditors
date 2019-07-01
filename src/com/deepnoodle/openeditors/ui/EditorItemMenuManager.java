@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.deepnoodle.openeditors.actions.CloseItemMenuAction;
-import com.deepnoodle.openeditors.actions.OpenItemMenuAction;
-import com.deepnoodle.openeditors.actions.PinMenuAction;
-import com.deepnoodle.openeditors.actions.UnPinMenuAction;
-import com.deepnoodle.openeditors.models.editor.IEditor;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.ui.actions.CloseItemMenuAction;
+import com.deepnoodle.openeditors.ui.actions.OpenItemMenuAction;
+import com.deepnoodle.openeditors.ui.actions.PinMenuAction;
+import com.deepnoodle.openeditors.ui.actions.UnPinMenuAction;
 
 public class EditorItemMenuManager implements IMenuListener {
 	//private static LogWrapper log = new LogWrapper(EditorItemMenuManager.class);

@@ -1,9 +1,9 @@
-package com.deepnoodle.openeditors.actions;
+package com.deepnoodle.openeditors.ui.actions;
 
 import org.eclipse.jface.action.Action;
 
-import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
-import com.deepnoodle.openeditors.views.openeditors.EditorTableView;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
+import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class SortAction extends Action {
 	protected EditorTableView editorTableView;

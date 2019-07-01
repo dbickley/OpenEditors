@@ -1,29 +1,25 @@
-package com.deepnoodle.openeditors.actions;
+package com.deepnoodle.openeditors.ui.actions;
 
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.IEditor;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
-import com.deepnoodle.openeditors.views.openeditors.EditorTableView;
+import com.deepnoodle.openeditors.ui.EditorTableView;
 
-public class CloseItemMenuAction extends Action {
-	private static LogWrapper log = new LogWrapper(CloseItemMenuAction.class);
+public class PinMenuAction extends Action {
+	private static LogWrapper log = new LogWrapper(PinMenuAction.class);
 
 	EditorService editorService = EditorService.getInstance();
 	SettingsService settingsService = SettingsService.getInstance();
 	private EditorTableView editorTableView;
 
-	private IWorkbenchPartSite site;
-
-	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
+	public PinMenuAction(EditorTableView editorTableView) {
 		this.editorTableView = editorTableView;
-		this.site = site;
-		setText("Close");
+		setText("Pin");
 	}
 
 	@Override
@@ -31,14 +27,11 @@ public class CloseItemMenuAction extends Action {
 		List<IEditor> editors = editorTableView.getSelections();
 		for (IEditor editor : editors) {
 			try {
-				if (editor.isOpened()) {
-					editorService.closeEditor(editor, site);
-				}
+				editor.setPinned(true);
 			} catch (Exception e) {
 				log.warn(e, "Could not close editor: %s", editor.getFilePath());
 			}
 		}
-
 		settingsService.saveSettings();
 		editorTableView.refresh();
 	}

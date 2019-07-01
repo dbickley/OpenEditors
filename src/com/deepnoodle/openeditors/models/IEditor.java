@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.models.editor;
+package com.deepnoodle.openeditors.models;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorReference;

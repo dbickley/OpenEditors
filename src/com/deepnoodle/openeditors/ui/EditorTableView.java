@@ -1,4 +1,4 @@
-package com.deepnoodle.openeditors.views.openeditors;
+package com.deepnoodle.openeditors.ui;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.EditorComparator;
-import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
-import com.deepnoodle.openeditors.models.editor.IEditor;
+import com.deepnoodle.openeditors.models.EditorComparator;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
+import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
 
 public class EditorTableView implements MouseListener, IPropertyListener {
 	

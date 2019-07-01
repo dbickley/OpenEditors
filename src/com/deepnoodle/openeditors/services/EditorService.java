@@ -21,8 +21,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.editor.IEditor;
-import com.deepnoodle.openeditors.models.settings.EditorSettingsModel;
+import com.deepnoodle.openeditors.models.EditorSettingsModel;
+import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.utils.IndexedEntry;
 
 //rename
