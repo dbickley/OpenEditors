@@ -18,7 +18,7 @@ public class SortAction extends Action {
 
 	@Override
 	public void run() {
-		editorTableView.getSorter().setSortBy(sortType);
+		editorTableView.setSortBy(sortType);
 		editorTableView.refresh();
 	}
 

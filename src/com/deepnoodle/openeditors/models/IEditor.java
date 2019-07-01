@@ -21,10 +21,6 @@ public interface IEditor {
 
 	void setNaturalPosition(Integer naturalPosition);
 
-	boolean isOpened();
-
-	void setOpened(boolean opened);
-
 	Integer getHistoryPosition();
 
 	void setHistoryPosition(Integer historyPosition);

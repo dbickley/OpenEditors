@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.IEditor;
-import com.deepnoodle.openeditors.persistence.SettingsService;
+import com.deepnoodle.openeditors.services.SettingsService;
 
 public class EditorRowFormatter {
 
@@ -18,15 +18,13 @@ public class EditorRowFormatter {
 	private Color dirtyColor;
 	private Color pinnedColor;
 	private Color highlightColor;
-	private Color closedColor;
 
 	private EditorRowFormatter() {
 		settingsService = SettingsService.getInstance();
 
-		dirtyColor = new Color(Display.getCurrent(), settingsService.getDirtyColor());
-		pinnedColor = new Color(Display.getCurrent(), settingsService.getPinnedColor());
-		highlightColor = new Color(Display.getCurrent(), settingsService.getHighlightColor());
-		closedColor = new Color(Display.getCurrent(), settingsService.getClosedColor());
+		dirtyColor = new Color(Display.getCurrent(), settingsService.getSettings().getDirtyColor());
+		pinnedColor = new Color(Display.getCurrent(), settingsService.getSettings().getPinnedColor());
+		highlightColor = new Color(Display.getCurrent(), settingsService.getSettings().getHighlightColor());
 	}
 
 	public static EditorRowFormatter getInstance() {
@@ -42,8 +40,6 @@ public class EditorRowFormatter {
 				IEditor editor = ((IEditor) item.getData());
 				if (editor.isPinned()) {
 					item.setForeground(pinnedColor);
-				} else if (!editor.isOpened()) {
-					item.setForeground(closedColor);
 				} else if (editor.isDirty()) {
 					item.setForeground(dirtyColor);
 				} else {

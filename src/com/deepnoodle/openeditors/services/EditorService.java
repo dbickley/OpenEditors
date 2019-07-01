@@ -21,16 +21,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.EditorSettingsModel;
+import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.models.IEditor;
-import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.utils.IndexedEntry;
 
-//rename
 public class EditorService {
 	private static LogWrapper log = new LogWrapper(EditorService.class);
 
-	private SettingsService settingsService = SettingsService.getInstance();
 	private static EditorService instance;
 
 	public static EditorService getInstance() {
@@ -116,8 +113,7 @@ public class EditorService {
 
 	private IEditor createEditorFromEclipseEditorReference(IEditorReference reference) {
 		String filePath = getFilePath(reference);
-		EditorSettingsModel editor = new EditorSettingsModel(filePath, reference.getName());
-		editor.setOpened(true);
+		EditorModel editor = new EditorModel(filePath, reference.getName());
 		editor.setReference(reference);
 		editor.setTitleImage(reference.getTitleImage());
 		editor.setTitleImagePath(reference.getTitleImage().getImageData().toString());

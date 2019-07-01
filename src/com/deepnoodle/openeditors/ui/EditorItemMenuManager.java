@@ -98,20 +98,10 @@ public class EditorItemMenuManager implements IMenuListener {
 	}
 
 	private boolean canClose(List<IEditor> editors) {
-		for (IEditor editor : editors) {
-			if (editor.isOpened()) {
-				return true;
-			}
-		}
-		return false;
+		return true;
 	}
 
 	private boolean canOpen(List<IEditor> editors) {
-		for (IEditor editor : editors) {
-			if (!editor.isOpened()) {
-				return true;
-			}
-		}
 		return false;
 	}
 

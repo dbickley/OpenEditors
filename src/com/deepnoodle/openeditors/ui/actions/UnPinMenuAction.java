@@ -6,8 +6,8 @@ import org.eclipse.jface.action.Action;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.IEditor;
-import com.deepnoodle.openeditors.persistence.SettingsService;
 import com.deepnoodle.openeditors.services.EditorService;
+import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class UnPinMenuAction extends Action {

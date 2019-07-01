@@ -20,10 +20,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.EditorComparator;
-import com.deepnoodle.openeditors.models.IEditor;
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
-import com.deepnoodle.openeditors.persistence.SettingsService;
+import com.deepnoodle.openeditors.models.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
+import com.deepnoodle.openeditors.services.SettingsService;
 
 public class EditorTableView implements MouseListener, IPropertyListener {
 	
@@ -92,7 +92,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 	
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		editorComparator.setSortBy(sortBy);
-		settingsService.setSortBy(sortBy);
+		settingsService.editAndSave( (settings) -> settings.setSortBy(sortBy) );
 		refresh();
 	}
 
@@ -103,10 +103,6 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 	public IEditor getSelection() {
 		return (IEditor) tableViewer.getStructuredSelection().getFirstElement();
-	}
-
-	public EditorComparator getSorter() {
-		return editorComparator;
 	}
 
 	public Control getTable() {
@@ -122,9 +118,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		TableItem[] items = tableViewer.getTable().getItems();
 		for (TableItem item : items) {
 			IEditor editor = ((IEditor) item.getData());
-			if (editor.isOpened()
-					&& editor.getReference() != null
-					&& editor.getReference().getPart(false) == activePart) {
+			if (editor.getReference() != null && editor.getReference().getPart(false) == activePart) {
 				setActiveEditor(editor);
 			}
 		}

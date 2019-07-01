@@ -3,13 +3,11 @@ package com.deepnoodle.openeditors.models;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorReference;
 
-//TODO change name, it's not just settings
-public class EditorSettingsModel implements IEditor {
+public class EditorModel implements IEditor {
 	private String filePath;
 	private String name;
 	private boolean pinned;
 	private Integer naturalPosition;
-	private boolean opened = false;
 	private String titleImagePath;
 
 	//These are not saved
@@ -18,6 +16,14 @@ public class EditorSettingsModel implements IEditor {
 	private transient IEditorReference reference;
 	private transient Image titleImage;
 
+	@Override
+	public String toString() {
+		return name;
+	}
+	
+	///////////////////////////////////////
+	// Getters and Setters
+	
 	@Override
 	public Image getTitleImage() {
 		return titleImage;
@@ -32,7 +38,7 @@ public class EditorSettingsModel implements IEditor {
 		this.dirty = dirty;
 	}
 
-	public EditorSettingsModel(String filePath, String name) {
+	public EditorModel(String filePath, String name) {
 		this.filePath = filePath;
 		this.name = name;
 	}
@@ -78,16 +84,6 @@ public class EditorSettingsModel implements IEditor {
 	}
 
 	@Override
-	public boolean isOpened() {
-		return opened;
-	}
-
-	@Override
-	public void setOpened(boolean opened) {
-		this.opened = opened;
-	}
-
-	@Override
 	public Integer getHistoryPosition() {
 		return historyPosition;
 	}
@@ -122,10 +118,4 @@ public class EditorSettingsModel implements IEditor {
 	public void setTitleImagePath(String titleImagePath) {
 		this.titleImagePath = titleImagePath;
 	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
 }
