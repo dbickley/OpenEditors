@@ -7,14 +7,14 @@ Bundle-Vendor: deepnoodle
 Automatic-Module-Name: OpenEditors
 Require-Bundle: org.eclipse.core.resources;bundle-version="3.11.0",
  org.eclipse.core.runtime;bundle-version="3.12.0",
- org.eclipse.jface
+ org.eclipse.jface,
+ com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.annotation;version="1.2.0",
  org.eclipse.ui,
  org.eclipse.ui.part,
  org.eclipse.ui.plugin
-Bundle-ClassPath: .,
- lib/gson-2.3.1.jar
+Bundle-ClassPath: .
 Bundle-Activator: com.deepnoodle.openeditors.Activator
 Bundle-ActivationPolicy: lazy
 
