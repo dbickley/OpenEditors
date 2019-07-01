@@ -34,7 +34,6 @@ public class CloseItemMenuAction extends Action {
 				if (editor.isOpened()) {
 					editorService.closeEditor(editor, site);
 				}
-				settingsService.getActiveEditorSettingsSet().getEditorModels().remove(editor.getFilePath());
 			} catch (Exception e) {
 				log.warn(e, "Could not close editor: %s", editor.getFilePath());
 			}

@@ -1,12 +1,9 @@
 package com.deepnoodle.openeditors.models.settings;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.eclipse.swt.graphics.RGB;
 
 import com.deepnoodle.openeditors.Constants;
+import com.deepnoodle.openeditors.models.editor.EditorComparator.SortType;
 
 public class SettingsModel {
 
@@ -18,12 +15,9 @@ public class SettingsModel {
 
 	private String activeSetName = Constants.OPEN_EDITORS_SET_NAME;
 
-	private Map<String, EditorSetSettingsModel> editorSettingsSets = new HashMap<>();
+	private SortType sortBy = SortType.ACCESS;
 
 	public SettingsModel() {
-		if (editorSettingsSets.get(activeSetName) == null) {
-			editorSettingsSets.put(activeSetName, new EditorSetSettingsModel());
-		}
 	}
 
 	public RGB getHighlightColor() {
@@ -66,34 +60,11 @@ public class SettingsModel {
 		activeSetName = currentSetName;
 	}
 
-	public EditorSetSettingsModel getActiveEditorSettingsSet() {
-		return getEditorSettingsSets().get(getActiveSetName());
+	public SortType getSortBy() {
+		return sortBy;
 	}
 
-	public Map<String, EditorSetSettingsModel> getEditorSettingsSets() {
-		return editorSettingsSets;
+	public void setSortBy(SortType sortBy) {
+		this.sortBy = sortBy;
 	}
-
-	public void setEditorSettingsSets(Map<String, EditorSetSettingsModel> editorSettingsSets) {
-		this.editorSettingsSets = editorSettingsSets;
-	}
-
-	public EditorSetSettingsModel getEditorSettingsSet(String name) {
-		return getEditorSettingsSets().get(name);
-	}
-
-	public Set<String> getSets() {
-		return getEditorSettingsSets().keySet();
-	}
-
-	//TODO add to settings
-	public boolean keepOpenEditorsHistory() {
-		return true;
-	}
-
-	//TODO add to settings
-	public boolean stickyEditorSettings() {
-		return false;
-	}
-
 }

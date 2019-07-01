@@ -92,7 +92,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 	
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		editorComparator.setSortBy(sortBy);
-		settingsService.getActiveEditorSettingsSet().setSortBy(sortBy);
+		settingsService.setSortBy(sortBy);
 		refresh();
 	}
 

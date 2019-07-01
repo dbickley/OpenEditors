@@ -21,6 +21,6 @@ class EditorViewContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object parent) {
-		return openEditorService.buildOpenEditors();
+		return openEditorService.buildOpenEditors().toArray();
 	}
 }
