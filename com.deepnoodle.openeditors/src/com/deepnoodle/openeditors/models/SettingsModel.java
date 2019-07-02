@@ -20,10 +20,10 @@ public class SettingsModel {
 	public String toString() {
 		return JsonUtils.toJson(this);
 	}
-	
+
 	///////////////////////////////////////
 	// Getters and Setters
-	
+
 	public RGB getHighlightColor() {
 		return highlightColor;
 	}
@@ -31,7 +31,7 @@ public class SettingsModel {
 	public void setHighlightColor(RGB highlightColor) {
 		this.highlightColor = highlightColor;
 	}
-	
+
 	public RGB getPinnedColor() {
 		return pinnedColor;
 	}

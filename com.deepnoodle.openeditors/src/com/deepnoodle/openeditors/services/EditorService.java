@@ -39,8 +39,8 @@ public class EditorService {
 
 	public void openEditor(IEditor editor, IWorkbenchPartSite site) throws PartInitException {
 		if (editor.getReference() != null) {
-			site.getWorkbenchWindow().getActivePage()
-					.openEditor(editor.getReference().getEditorInput(), editor.getReference().getId());
+			site.getWorkbenchWindow().getActivePage().openEditor(editor.getReference().getEditorInput(),
+			    editor.getReference().getId());
 		} else {
 			openEditor(editor.getFilePath(), site);
 		}
@@ -54,21 +54,19 @@ public class EditorService {
 		IEditorDescriptor editorDescriptor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(filePath);
 		String editorDescriptorId;
 		if (editorDescriptor == null) {
-			
+
 			PlatformUI.getWorkbench().getEditorRegistry().findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
 			editorDescriptorId = IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID;
 		} else {
 			editorDescriptorId = editorDescriptor.getId();
 		}
-		site.getWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file),
-				editorDescriptorId);
+		site.getWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file), editorDescriptorId);
 	}
 
 	public void closeEditor(IEditor editor, IWorkbenchPartSite site) {
 		IEditorPart iEditorPart = editor.getReference().getEditor(true);
 		if (iEditorPart != null) {
-			site.getWorkbenchWindow().getActivePage()
-					.closeEditor(iEditorPart, true);
+			site.getWorkbenchWindow().getActivePage().closeEditor(iEditorPart, true);
 		}
 
 	}
@@ -96,18 +94,17 @@ public class EditorService {
 
 	public List<IEditor> buildOpenEditors() {
 		List<IEditor> openEditors = new ArrayList<>();
-		
-		IWorkbenchPage activePage = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
+
+		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
 		// Loop through open editors, add them to the set if need be.
 		IEditorReference[] references = activePage.getEditorReferences();
-		for (IndexedEntry<IEditorReference> entryWithIndex : indexed(references) ) {
+		for (IndexedEntry<IEditorReference> entryWithIndex : indexed(references)) {
 			IEditor editor = createEditorFromEclipseEditorReference(entryWithIndex.getEntry());
 			editor.setNaturalPosition(entryWithIndex.getIndex());
 			openEditors.add(editor);
 		}
-		
+
 		return openEditors;
 	}
 
@@ -120,5 +117,5 @@ public class EditorService {
 		editor.setDirty(reference.isDirty());
 		return editor;
 	}
-	
+
 }

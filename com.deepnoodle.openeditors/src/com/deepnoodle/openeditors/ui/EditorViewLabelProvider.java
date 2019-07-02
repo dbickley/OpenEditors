@@ -12,14 +12,14 @@ import com.deepnoodle.openeditors.models.IEditor;
 class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
 	public EditorViewLabelProvider() {
-		super( new EditorStyledLabelProvider() );
+		super(new EditorStyledLabelProvider());
 	}
-	
+
 	@Override
 	public Image getImage(Object obj) {
 		Image image = null;
 		IEditor editor = ((IEditor) obj);
-		if(editor.getReference() != null) {
+		if (editor.getReference() != null) {
 			image = editor.getReference().getTitleImage();
 		}
 
@@ -29,19 +29,19 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 		}
 		return image;
 	}
-	
+
 	private static class EditorStyledLabelProvider extends LabelProvider implements IStyledLabelProvider {
 
 		@Override
 		public String getText(Object obj) {
 			IEditor editor = ((IEditor) obj);
 			if (editor.isDirty()) {
-				return "*"+editor.getName();
+				return "*" + editor.getName();
 			} else {
 				return editor.getName();
 			}
 		}
-		
+
 		@Override
 		public StyledString getStyledText(Object element) {
 			StyledString str = new StyledString(getText(element));

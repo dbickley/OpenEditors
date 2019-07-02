@@ -34,7 +34,8 @@ public class EditorItemMenuManager implements IMenuListener {
 
 	//TODO if performance issues, find a better way then rebuilding the menu everytime
 	public EditorItemMenuManager(final EditorTableView editorTableView, final IWorkbenchPartSite site,
-			Composite parent) {
+	    Composite parent) {
+
 		this.editorTableView = editorTableView;
 		menuManager = new MenuManager() {
 

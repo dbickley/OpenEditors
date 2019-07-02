@@ -15,14 +15,15 @@ import com.deepnoodle.openeditors.utils.JsonUtils;
 import com.deepnoodle.openeditors.utils.PathUtils;
 
 public class PersistenceService implements IPersistenceService {
-	
+
 	private static LogWrapper log = new LogWrapper(PersistenceService.class);
-	
+
+	@Override
 	public <T> Optional<T> load(String fileName, Class<T> clazz) {
 		IPath file = getPersistentDataPath(fileName);
 		try {
 			log.info("Loading file '" + file + "'");
-			String json = Files.readString( PathUtils.toJavaPath(file), StandardCharsets.UTF_8 );
+			String json = Files.readString(PathUtils.toJavaPath(file), StandardCharsets.UTF_8);
 			T loadedInstance = JsonUtils.fromJson(json, clazz);
 			return Optional.of(loadedInstance);
 		} catch (NoSuchFileException | FileNotFoundException noFileException) {
@@ -34,24 +35,25 @@ public class PersistenceService implements IPersistenceService {
 		}
 	}
 
+	@Override
 	public <T> void save(String fileName, T object) {
 		IPath file = getPersistentDataPath(fileName);
 		try {
 			String json = JsonUtils.toJsonPrettyPrint(object);
-			Files.writeString( PathUtils.toJavaPath(file), json, StandardCharsets.UTF_8 );
-		} catch(Exception e) {
+			Files.writeString(PathUtils.toJavaPath(file), json, StandardCharsets.UTF_8);
+		} catch (Exception e) {
 			log.error(e, "Cannot save object " + object);
 		}
 	}
-	
+
 	private IPath getPersistentDataPath(String fileName) {
 		IPath folder = getPersistentDataPath();
 		IPath filePath = folder.append(fileName).makeAbsolute();
 		return filePath;
 	}
-	
+
 	private IPath getPersistentDataPath() {
-		if(Activator.getDefault() != null) {
+		if (Activator.getDefault() != null) {
 			return Activator.getDefault().getStateLocation();
 		} else {
 			return new Path("persistentData");

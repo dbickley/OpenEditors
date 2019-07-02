@@ -22,26 +22,26 @@ public class EditorComparator extends ViewerComparator {
 		int compare = Boolean.compare(editor2.isPinned(), editor1.isPinned());
 		if (compare == 0) {
 			switch (sortBy) {
-				case ACCESS:
-					compare = compare(editor2.getHistoryPosition(), editor1.getHistoryPosition());
-					break;
-				case NATURAL:
-					compare = compare(editor1.getNaturalPosition(), editor2.getNaturalPosition());
-					break;
-				case NAME:
-					compare = compare(editor1.getName().toLowerCase(), editor2.getName().toLowerCase());
-					break;
-				case PATH:
-					compare = compare(editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase());
-					break;
-				default:
-					break;
+			case ACCESS :
+				compare = compare(editor2.getHistoryPosition(), editor1.getHistoryPosition());
+				break;
+			case NATURAL :
+				compare = compare(editor1.getNaturalPosition(), editor2.getNaturalPosition());
+				break;
+			case NAME :
+				compare = compare(editor1.getName().toLowerCase(), editor2.getName().toLowerCase());
+				break;
+			case PATH :
+				compare = compare(editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase());
+				break;
+			default :
+				break;
 			}
 		}
 		return compare;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public int compare(final Comparable one, final Comparable two) {
 		if (one == null ^ two == null) {
 			return (one == null) ? -1 : 1;

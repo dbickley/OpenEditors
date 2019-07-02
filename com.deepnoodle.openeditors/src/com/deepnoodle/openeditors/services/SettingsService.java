@@ -35,7 +35,7 @@ public class SettingsService {
 				log.info("Loaded default settings model");
 				return new SettingsModel();
 			});
-			log.info("Loaded settings model "+settings);
+			log.info("Loaded settings model " + settings);
 		}
 		return settings;
 	}
@@ -47,7 +47,7 @@ public class SettingsService {
 		log.info("Saving settings model");
 		persistenceService.save(SETTINGS_FILENAME, settings);
 	}
-	
+
 	/**
 	 * Runs the consumer on the current settings model (e.g. to call its setters)
 	 * and saves the settings model afterwards.

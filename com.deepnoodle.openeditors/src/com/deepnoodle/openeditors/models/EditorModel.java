@@ -20,10 +20,10 @@ public class EditorModel implements IEditor {
 	public String toString() {
 		return name;
 	}
-	
+
 	///////////////////////////////////////
 	// Getters and Setters
-	
+
 	@Override
 	public Image getTitleImage() {
 		return titleImage;
