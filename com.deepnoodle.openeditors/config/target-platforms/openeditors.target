@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="OpenEditors Target Platform">
+    <locations>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="http://download.eclipse.org/eclipse/updates/4.12"/>
+            <unit id="org.eclipse.platform.sdk" version="4.12.0.I20190605-1800"/>
+        </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
+            <unit id="com.google.gson" version="2.2.4.v201311231704"/>
+            <unit id="com.google.gson.source" version="2.2.4.v201311231704"/>
+        </location>
+    </locations>
+</target>
