@@ -1,42 +1,26 @@
 package com.deepnoodle.openeditors.ui;
 
-import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import com.deepnoodle.openeditors.models.IEditor;
 
-class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvider {
+class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
-	@Override
-	public String getColumnText(Object obj, int index) {
-		IEditor editor = ((IEditor) obj);
-		if (editor.isDirty()) {
-			return "*"+getText(obj);
-		} else {
-			return getText(obj);
-		}
+	public EditorViewLabelProvider() {
+		super( new EditorStyledLabelProvider() );
 	}
-
-	@Override
-	public Image getColumnImage(Object obj, int index) {
-		return getImage(obj);
-	}
-
+	
 	@Override
 	public Image getImage(Object obj) {
 		Image image = null;
-		if (obj instanceof IEditor) {
-			IEditor editor = ((IEditor) obj);
-			image = editor.getTitleImage();
-			if (image == null) {
-				//Load the image for the file
-				image = PlatformUI.getWorkbench().getEditorRegistry()
-						.getImageDescriptor(editor.getFilePath())
-						.createImage();
-			}
+		IEditor editor = ((IEditor) obj);
+		if(editor.getReference() != null) {
+			image = editor.getReference().getTitleImage();
 		}
 
 		//Default to file image if none found
@@ -44,6 +28,27 @@ class EditorViewLabelProvider extends LabelProvider implements ITableLabelProvid
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 		}
 		return image;
+	}
+	
+	private static class EditorStyledLabelProvider extends LabelProvider implements IStyledLabelProvider {
+
+		@Override
+		public String getText(Object obj) {
+			IEditor editor = ((IEditor) obj);
+			if (editor.isDirty()) {
+				return "*"+editor.getName();
+			} else {
+				return editor.getName();
+			}
+		}
+		
+		@Override
+		public StyledString getStyledText(Object element) {
+			StyledString str = new StyledString(getText(element));
+			// Show extra info in lighter color
+			// str.append(" - " + "extra info", StyledString.QUALIFIER_STYLER);
+			return str;
+		}
 	}
 
 }
