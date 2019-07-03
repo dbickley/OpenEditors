@@ -9,7 +9,7 @@ import com.deepnoodle.openeditors.persistence.IPersistenceService;
 import com.deepnoodle.openeditors.persistence.PersistenceService;
 
 public class SettingsService {
-	private static LogWrapper log = new LogWrapper(SettingsService.class);
+	private static LogWrapper log = new LogWrapper( SettingsService.class );
 
 	private final static SettingsService INSTANCE = new SettingsService();
 
@@ -29,13 +29,13 @@ public class SettingsService {
 	 * @return
 	 */
 	public SettingsModel getSettings() {
-		if (settings == null) {
-			Optional<SettingsModel> loadedSettings = persistenceService.load(SETTINGS_FILENAME, SettingsModel.class);
-			settings = loadedSettings.orElseGet(() -> {
-				log.info("Loaded default settings model");
+		if( settings == null ) {
+			Optional<SettingsModel> loadedSettings = persistenceService.load( SETTINGS_FILENAME, SettingsModel.class );
+			settings = loadedSettings.orElseGet( () -> {
+				log.info( "Loaded default settings model" );
 				return new SettingsModel();
-			});
-			log.info("Loaded settings model " + settings);
+			} );
+			log.info( "Loaded settings model " + settings );
 		}
 		return settings;
 	}
@@ -44,8 +44,8 @@ public class SettingsService {
 	 * Saves the current settings model to the file system.
 	 */
 	public void saveSettings() {
-		log.info("Saving settings model");
-		persistenceService.save(SETTINGS_FILENAME, settings);
+		log.info( "Saving settings model" );
+		persistenceService.save( SETTINGS_FILENAME, settings );
 	}
 
 	/**
@@ -53,8 +53,8 @@ public class SettingsService {
 	 * and saves the settings model afterwards.
 	 */
 	public void editAndSave(Consumer<SettingsModel> consumer) {
-		log.info("Editing settings model");
-		consumer.accept(settings);
+		log.info( "Editing settings model" );
+		consumer.accept( settings );
 		saveSettings();
 	}
 }

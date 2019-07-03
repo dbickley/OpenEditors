@@ -12,7 +12,7 @@ import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class OpenItemMenuAction extends Action {
-	private static LogWrapper log = new LogWrapper(OpenItemMenuAction.class);
+	private static LogWrapper log = new LogWrapper( OpenItemMenuAction.class );
 
 	EditorService editorService = EditorService.getInstance();
 	SettingsService settingsService = SettingsService.getInstance();
@@ -23,17 +23,17 @@ public class OpenItemMenuAction extends Action {
 	public OpenItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
 		this.editorTableView = editorTableView;
 		this.site = site;
-		setText("Open");
+		setText( "Open" );
 	}
 
 	@Override
 	public void run() {
 		List<IEditor> editors = editorTableView.getSelections();
-		for (IEditor editor : editors) {
+		for( IEditor editor : editors ) {
 			try {
-				editorService.openEditor(editor, site);
-			} catch (Exception e) {
-				log.warn(e, "Could not open editor: %s", editor.getFilePath());
+				editorService.openEditor( editor, site );
+			} catch( Exception e ) {
+				log.warn( e, "Could not open editor: %s", editor.getFilePath() );
 			}
 		}
 		editorTableView.refresh();

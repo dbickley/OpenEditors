@@ -15,14 +15,14 @@ public class Activator extends AbstractUIPlugin {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		super.start( context );
 		plugin = this;
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		super.stop(context);
+		super.stop( context );
 	}
 
 	public static Activator getDefault() {
@@ -30,6 +30,6 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return imageDescriptorFromPlugin( PLUGIN_ID, path );
 	}
 }

@@ -41,24 +41,24 @@ public class EditorItemMenuManager implements IMenuListener {
 
 			@Override
 			public void fill(Menu parent, int index) {
-				super.fill(parent, index);
+				super.fill( parent, index );
 			}
 
 		};
-		menuManager.addMenuListener(this);
-		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener( this );
+		menuManager.setRemoveAllWhenShown( true );
 
-		pinMenuItem = new ActionContributionItem(new PinMenuAction(editorTableView));
-		menuManager.add(pinMenuItem);
+		pinMenuItem = new ActionContributionItem( new PinMenuAction( editorTableView ) );
+		menuManager.add( pinMenuItem );
 
-		unPinMenuItem = new ActionContributionItem(new UnPinMenuAction(editorTableView));
-		menuManager.add(unPinMenuItem);
+		unPinMenuItem = new ActionContributionItem( new UnPinMenuAction( editorTableView ) );
+		menuManager.add( unPinMenuItem );
 
-		openMenuItem = new ActionContributionItem(new OpenItemMenuAction(editorTableView, site));
-		menuManager.add(openMenuItem);
+		openMenuItem = new ActionContributionItem( new OpenItemMenuAction( editorTableView, site ) );
+		menuManager.add( openMenuItem );
 
-		closeMenuItem = new ActionContributionItem(new CloseItemMenuAction(editorTableView, site));
-		menuManager.add(closeMenuItem);
+		closeMenuItem = new ActionContributionItem( new CloseItemMenuAction( editorTableView, site ) );
+		menuManager.add( closeMenuItem );
 
 	}
 
@@ -68,21 +68,21 @@ public class EditorItemMenuManager implements IMenuListener {
 		List<IEditor> selections = editorTableView.getSelections();
 		//TODO should I just add the ones I want or set visibility and add all?
 
-		pinMenuItem.setVisible(canPin(selections));
-		unPinMenuItem.setVisible(canUnPin(selections));
-		openMenuItem.setVisible(canOpen(selections));
-		closeMenuItem.setVisible(canClose(selections));
+		pinMenuItem.setVisible( canPin( selections ) );
+		unPinMenuItem.setVisible( canUnPin( selections ) );
+		openMenuItem.setVisible( canOpen( selections ) );
+		closeMenuItem.setVisible( canClose( selections ) );
 
-		menuManager.add(pinMenuItem);
-		menuManager.add(unPinMenuItem);
-		menuManager.add(openMenuItem);
-		menuManager.add(closeMenuItem);
+		menuManager.add( pinMenuItem );
+		menuManager.add( unPinMenuItem );
+		menuManager.add( openMenuItem );
+		menuManager.add( closeMenuItem );
 
 	}
 
 	private boolean canPin(List<IEditor> editors) {
-		for (IEditor editor : editors) {
-			if (!editor.isPinned()) {
+		for( IEditor editor : editors ) {
+			if( !editor.isPinned() ) {
 				return true;
 			}
 		}
@@ -90,8 +90,8 @@ public class EditorItemMenuManager implements IMenuListener {
 	}
 
 	private boolean canUnPin(List<IEditor> editors) {
-		for (IEditor editor : editors) {
-			if (editor.isPinned()) {
+		for( IEditor editor : editors ) {
+			if( editor.isPinned() ) {
 				return true;
 			}
 		}
@@ -107,7 +107,7 @@ public class EditorItemMenuManager implements IMenuListener {
 	}
 
 	public Menu createContextMenu(Control parent) {
-		return menuManager.createContextMenu(parent);
+		return menuManager.createContextMenu( parent );
 	}
 
 }

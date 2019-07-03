@@ -11,7 +11,7 @@ import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class PinMenuAction extends Action {
-	private static LogWrapper log = new LogWrapper(PinMenuAction.class);
+	private static LogWrapper log = new LogWrapper( PinMenuAction.class );
 
 	EditorService editorService = EditorService.getInstance();
 	SettingsService settingsService = SettingsService.getInstance();
@@ -19,17 +19,17 @@ public class PinMenuAction extends Action {
 
 	public PinMenuAction(EditorTableView editorTableView) {
 		this.editorTableView = editorTableView;
-		setText("Pin");
+		setText( "Pin" );
 	}
 
 	@Override
 	public void run() {
 		List<IEditor> editors = editorTableView.getSelections();
-		for (IEditor editor : editors) {
+		for( IEditor editor : editors ) {
 			try {
-				editor.setPinned(true);
-			} catch (Exception e) {
-				log.warn(e, "Could not close editor: %s", editor.getFilePath());
+				editor.setPinned( true );
+			} catch( Exception e ) {
+				log.warn( e, "Could not close editor: %s", editor.getFilePath() );
 			}
 		}
 		settingsService.saveSettings();

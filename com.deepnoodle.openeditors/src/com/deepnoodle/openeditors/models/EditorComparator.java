@@ -19,20 +19,20 @@ public class EditorComparator extends ViewerComparator {
 		IEditor editor1 = (IEditor) e1;
 		IEditor editor2 = (IEditor) e2;
 
-		int compare = Boolean.compare(editor2.isPinned(), editor1.isPinned());
-		if (compare == 0) {
-			switch (sortBy) {
+		int compare = Boolean.compare( editor2.isPinned(), editor1.isPinned() );
+		if( compare == 0 ) {
+			switch( sortBy ) {
 			case ACCESS :
-				compare = compare(editor2.getHistoryPosition(), editor1.getHistoryPosition());
+				compare = compare( editor2.getHistoryPosition(), editor1.getHistoryPosition() );
 				break;
 			case NATURAL :
-				compare = compare(editor1.getNaturalPosition(), editor2.getNaturalPosition());
+				compare = compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );
 				break;
 			case NAME :
-				compare = compare(editor1.getName().toLowerCase(), editor2.getName().toLowerCase());
+				compare = compare( editor1.getName().toLowerCase(), editor2.getName().toLowerCase() );
 				break;
 			case PATH :
-				compare = compare(editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase());
+				compare = compare( editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase() );
 				break;
 			default :
 				break;
@@ -43,15 +43,15 @@ public class EditorComparator extends ViewerComparator {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public int compare(final Comparable one, final Comparable two) {
-		if (one == null ^ two == null) {
-			return (one == null) ? -1 : 1;
+		if( one == null ^ two == null ) {
+			return ( one == null ) ? -1 : 1;
 		}
 
-		if (one == null && two == null) {
+		if( one == null && two == null ) {
 			return 0;
 		}
 
-		return one.compareTo(two);
+		return one.compareTo( two );
 	}
 
 	public SortType getSortBy() {

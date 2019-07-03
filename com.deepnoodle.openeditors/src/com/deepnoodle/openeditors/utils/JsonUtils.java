@@ -12,15 +12,15 @@ public final class JsonUtils {
 	}
 
 	public static <T> String toJson(T object) {
-		return gson.toJson(object);
+		return gson.toJson( object );
 	}
 
 	public static <T> String toJsonPrettyPrint(T object) {
-		return gsonWithPrettyPrinting.toJson(object);
+		return gsonWithPrettyPrinting.toJson( object );
 	}
 
 	public static <T> T fromJson(String json, Class<T> clazz) {
-		return gson.fromJson(json, clazz);
+		return gson.fromJson( json, clazz );
 	}
 
 	private static Gson createGson() {

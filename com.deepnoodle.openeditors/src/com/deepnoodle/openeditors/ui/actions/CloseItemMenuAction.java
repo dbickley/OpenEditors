@@ -12,7 +12,7 @@ import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class CloseItemMenuAction extends Action {
-	private static LogWrapper log = new LogWrapper(CloseItemMenuAction.class);
+	private static LogWrapper log = new LogWrapper( CloseItemMenuAction.class );
 
 	EditorService editorService = EditorService.getInstance();
 	SettingsService settingsService = SettingsService.getInstance();
@@ -23,17 +23,17 @@ public class CloseItemMenuAction extends Action {
 	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
 		this.editorTableView = editorTableView;
 		this.site = site;
-		setText("Close");
+		setText( "Close" );
 	}
 
 	@Override
 	public void run() {
 		List<IEditor> editors = editorTableView.getSelections();
-		for (IEditor editor : editors) {
+		for( IEditor editor : editors ) {
 			try {
-				editorService.closeEditor(editor, site);
-			} catch (Exception e) {
-				log.warn(e, "Could not close editor: %s", editor.getFilePath());
+				editorService.closeEditor( editor, site );
+			} catch( Exception e ) {
+				log.warn( e, "Could not close editor: %s", editor.getFilePath() );
 			}
 		}
 

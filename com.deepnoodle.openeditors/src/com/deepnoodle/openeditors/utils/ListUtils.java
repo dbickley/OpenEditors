@@ -15,37 +15,37 @@ public final class ListUtils {
 	}
 
 	public static <T> boolean isNullOrEmpty(Collection<T> collection) {
-		return (collection == null || collection.isEmpty());
+		return ( collection == null || collection.isEmpty() );
 	}
 
 	public static <T> List<T> toList(Collection<T> collection) {
-		if (collection instanceof List) {
+		if( collection instanceof List ) {
 			return (List<T>) collection;
 		} else {
-			return collection.stream().collect(Collectors.toList());
+			return collection.stream().collect( Collectors.toList() );
 		}
 	}
 
 	public static <T> List<T> toList(T[] array) {
-		List<T> result = new ArrayList<>(array.length);
-		for (T element : array) {
-			result.add(element);
+		List<T> result = new ArrayList<>( array.length );
+		for( T element : array ) {
+			result.add( element );
 		}
 		return result;
 	}
 
 	public static <T, R> List<R> map(T[] collection, Function<T, R> mapper) {
-		List<R> result = Arrays.stream(collection).map(mapper).collect(Collectors.toList());
+		List<R> result = Arrays.stream( collection ).map( mapper ).collect( Collectors.toList() );
 		return result;
 	}
 
 	public static <T, R> List<R> map(Collection<T> collection, Function<T, R> mapper) {
-		List<R> result = collection.stream().map(mapper).collect(Collectors.toList());
+		List<R> result = collection.stream().map( mapper ).collect( Collectors.toList() );
 		return result;
 	}
 
 	public static <T> List<T> filter(Collection<T> collection, Predicate<T> predicate) {
-		List<T> result = collection.stream().filter(predicate).collect(Collectors.toList());
+		List<T> result = collection.stream().filter( predicate ).collect( Collectors.toList() );
 		return result;
 	}
 
@@ -68,7 +68,7 @@ public final class ListUtils {
 					@Override
 					public IndexedEntry<T> next() {
 						T currentObject = array[currentIndex];
-						IndexedEntry<T> result = new IndexedEntry<>(currentObject, currentIndex);
+						IndexedEntry<T> result = new IndexedEntry<>( currentObject, currentIndex );
 						currentIndex++;
 						return result;
 					}
@@ -103,7 +103,7 @@ public final class ListUtils {
 					@Override
 					public IndexedEntry<T> next() {
 						T currentObject = iterator.next();
-						IndexedEntry<T> result = new IndexedEntry<>(currentObject, currentIndex);
+						IndexedEntry<T> result = new IndexedEntry<>( currentObject, currentIndex );
 						currentIndex++;
 						return result;
 					}

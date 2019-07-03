@@ -16,27 +16,29 @@ public class OpenEditorsMainView extends ViewPart {
 	private EditorTableView editorTableView;
 
 	private PartListener partListener;
-	
+
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
-		editorTableView = new EditorTableView(parent, getSite(), getViewSite());
-		partListener = new PartListener(editorTableView);
-		getSite().getWorkbenchWindow().getPartService().addPartListener(partListener);
+		editorTableView = new EditorTableView( parent, getSite(), getViewSite() );
+		partListener = new PartListener( editorTableView );
+		getSite().getWorkbenchWindow().getPartService().addPartListener( partListener );
 
+		// @formatter:off
 		Action sortByNameAction = new SortAction(editorTableView,
-				EditorComparator.SortType.NAME,
-				"Sort by Name",
-				"Sorts the tabs by name");
+			EditorComparator.SortType.NAME,
+			"Sort by Name",
+			"Sorts the tabs by name");
 		Action sortByPathAction = new SortAction(editorTableView,
-				EditorComparator.SortType.PATH,
-				"Sort by Path",
-				"Sorts the tabs by full path");
+			EditorComparator.SortType.PATH,
+			"Sort by Path",
+			"Sorts the tabs by full path");
+		// @formatter:on
 
 		IActionBars bars = getViewSite().getActionBars();
 		IMenuManager menuManager = bars.getMenuManager();
-		menuManager.add(sortByNameAction);
-		menuManager.add(sortByPathAction);
+		menuManager.add( sortByNameAction );
+		menuManager.add( sortByPathAction );
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class OpenEditorsMainView extends ViewPart {
 	@Override
 	public void dispose() {
 		// Remove all listeners
-		getSite().getWorkbenchWindow().getPartService().removePartListener(partListener);
+		getSite().getWorkbenchWindow().getPartService().removePartListener( partListener );
 		editorTableView.dispose();
 	}
 }

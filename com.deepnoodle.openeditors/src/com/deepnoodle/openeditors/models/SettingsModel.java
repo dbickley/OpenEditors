@@ -7,9 +7,9 @@ import com.deepnoodle.openeditors.utils.JsonUtils;
 
 public class SettingsModel {
 
-	private RGB highlightColor = new RGB(219, 219, 219);
-	private RGB pinnedColor = new RGB(60, 15, 175);
-	private RGB dirtyColor = new RGB(204, 0, 0);
+	private RGB highlightColor = new RGB( 219, 219, 219 );
+	private RGB pinnedColor = new RGB( 60, 15, 175 );
+	private RGB dirtyColor = new RGB( 204, 0, 0 );
 
 	private SortType sortBy = SortType.ACCESS;
 
@@ -18,7 +18,7 @@ public class SettingsModel {
 
 	@Override
 	public String toString() {
-		return JsonUtils.toJson(this);
+		return JsonUtils.toJson( this );
 	}
 
 	///////////////////////////////////////

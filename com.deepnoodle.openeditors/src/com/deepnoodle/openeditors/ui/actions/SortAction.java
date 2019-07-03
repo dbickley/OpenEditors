@@ -12,13 +12,13 @@ public class SortAction extends Action {
 	public SortAction(EditorTableView editorTableView, SortType sortType, String text, String tooltip) {
 		this.editorTableView = editorTableView;
 		this.sortType = sortType;
-		setText(text);
-		setToolTipText(tooltip);
+		setText( text );
+		setToolTipText( tooltip );
 	}
 
 	@Override
 	public void run() {
-		editorTableView.setSortBy(sortType);
+		editorTableView.setSortBy( sortType );
 		editorTableView.refresh();
 	}
 

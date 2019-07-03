@@ -10,7 +10,7 @@ import com.deepnoodle.openeditors.services.SettingsService;
 
 public class EditorRowFormatter {
 
-	private static LogWrapper log = new LogWrapper(EditorTableView.class);
+	private static LogWrapper log = new LogWrapper( EditorTableView.class );
 	private static EditorRowFormatter instance;
 
 	private SettingsService settingsService;
@@ -22,38 +22,38 @@ public class EditorRowFormatter {
 	private EditorRowFormatter() {
 		settingsService = SettingsService.getInstance();
 
-		dirtyColor = new Color(Display.getCurrent(), settingsService.getSettings().getDirtyColor());
-		pinnedColor = new Color(Display.getCurrent(), settingsService.getSettings().getPinnedColor());
-		highlightColor = new Color(Display.getCurrent(), settingsService.getSettings().getHighlightColor());
+		dirtyColor = new Color( Display.getCurrent(), settingsService.getSettings().getDirtyColor() );
+		pinnedColor = new Color( Display.getCurrent(), settingsService.getSettings().getPinnedColor() );
+		highlightColor = new Color( Display.getCurrent(), settingsService.getSettings().getHighlightColor() );
 	}
 
 	public static EditorRowFormatter getInstance() {
-		if (instance == null) {
+		if( instance == null ) {
 			instance = new EditorRowFormatter();
 		}
 		return instance;
 	}
 
 	public void formatRows(TableItem[] items, IEditor activeEditor, Color forgroundColor, Color backgroundColor) {
-		for (TableItem item : items) {
+		for( TableItem item : items ) {
 			try {
-				IEditor editor = ((IEditor) item.getData());
-				if (editor.isPinned()) {
-					item.setForeground(pinnedColor);
-				} else if (editor.isDirty()) {
-					item.setForeground(dirtyColor);
+				IEditor editor = ( (IEditor) item.getData() );
+				if( editor.isPinned() ) {
+					item.setForeground( pinnedColor );
+				} else if( editor.isDirty() ) {
+					item.setForeground( dirtyColor );
 				} else {
-					item.setForeground(forgroundColor);
+					item.setForeground( forgroundColor );
 				}
 
-				if (activeEditor != null && editor.getFilePath().equals(activeEditor.getFilePath())) {
-					item.setBackground(highlightColor);
+				if( activeEditor != null && editor.getFilePath().equals( activeEditor.getFilePath() ) ) {
+					item.setBackground( highlightColor );
 				} else {
-					item.setBackground(backgroundColor);
+					item.setBackground( backgroundColor );
 				}
-				item.setChecked(false);
-			} catch (Exception e) {
-				log.warn(e);
+				item.setChecked( false );
+			} catch( Exception e ) {
+				log.warn( e );
 			}
 		}
 	}

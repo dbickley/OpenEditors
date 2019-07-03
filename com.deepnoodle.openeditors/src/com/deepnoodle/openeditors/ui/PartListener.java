@@ -13,29 +13,29 @@ public class PartListener implements IPartListener {
 
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		if (part instanceof EditorPart) {
-			editorTableView.setActivePart(part);
+		if( part instanceof EditorPart ) {
+			editorTableView.setActivePart( part );
 			editorTableView.refresh();
 		}
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
-		if (part instanceof EditorPart) {
+		if( part instanceof EditorPart ) {
 			editorTableView.refresh();
 		}
 	}
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		if (part instanceof EditorPart) {
+		if( part instanceof EditorPart ) {
 			editorTableView.refresh();
 		}
 	}
 
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
-		if (part instanceof EditorPart) {
+		if( part instanceof EditorPart ) {
 			editorTableView.refresh();
 		}
 
@@ -44,6 +44,6 @@ public class PartListener implements IPartListener {
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
 		// Do nothing
-		editorTableView.setActivePart(null);
+		editorTableView.setActivePart( null );
 	}
 }

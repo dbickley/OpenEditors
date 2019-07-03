@@ -10,7 +10,7 @@ public final class PathUtils {
 	}
 
 	public static java.nio.file.Path toJavaPath(IPath path) {
-		return Paths.get(path.toOSString());
+		return Paths.get( path.toOSString() );
 	}
 
 }
