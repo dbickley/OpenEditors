@@ -9,6 +9,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import com.deepnoodle.openeditors.models.EditorComparator;
+import com.deepnoodle.openeditors.services.EditorService;
+import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.actions.SortAction;
 
 public class OpenEditorsMainView extends ViewPart {
@@ -17,11 +19,20 @@ public class OpenEditorsMainView extends ViewPart {
 
 	private PartListener partListener;
 
+	private EditorService editorService;
+	private SettingsService settingsService;
+	private EditorRowFormatter editorRowFormatter;
+
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
-		editorTableView = new EditorTableView( parent, getSite(), getViewSite() );
+		editorService = new EditorService();
+		settingsService = new SettingsService();
+		editorRowFormatter = new EditorRowFormatter( settingsService );
+		editorTableView =
+		    new EditorTableView( parent, getViewSite(), settingsService, editorService, editorRowFormatter );
 		partListener = new PartListener( editorTableView );
+
 		getSite().getWorkbenchWindow().getPartService().addPartListener( partListener );
 
 		// @formatter:off

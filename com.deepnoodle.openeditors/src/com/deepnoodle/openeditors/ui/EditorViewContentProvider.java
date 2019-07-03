@@ -7,7 +7,11 @@ import com.deepnoodle.openeditors.services.EditorService;
 
 class EditorViewContentProvider implements IStructuredContentProvider {
 
-	private EditorService openEditorService = EditorService.getInstance();
+	private EditorService editorService;
+
+	public EditorViewContentProvider(EditorService editorService) {
+		this.editorService = editorService;
+	}
 
 	@Override
 	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -21,6 +25,6 @@ class EditorViewContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object parent) {
-		return openEditorService.buildOpenEditors().toArray();
+		return editorService.buildOpenEditors().toArray();
 	}
 }

@@ -8,21 +8,21 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class OpenItemMenuAction extends Action {
 	private static LogWrapper log = new LogWrapper( OpenItemMenuAction.class );
 
-	EditorService editorService = EditorService.getInstance();
-	SettingsService settingsService = SettingsService.getInstance();
+	EditorService editorService;
+
 	private EditorTableView editorTableView;
 
 	private IWorkbenchPartSite site;
 
-	public OpenItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
+	public OpenItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site, EditorService editorService) {
 		this.editorTableView = editorTableView;
 		this.site = site;
+		this.editorService = editorService;
 		setText( "Open" );
 	}
 

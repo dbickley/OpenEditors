@@ -11,16 +11,10 @@ import com.deepnoodle.openeditors.persistence.PersistenceService;
 public class SettingsService {
 	private static LogWrapper log = new LogWrapper( SettingsService.class );
 
-	private final static SettingsService INSTANCE = new SettingsService();
-
 	private static final String SETTINGS_FILENAME = "settings.json";
 
 	private IPersistenceService persistenceService = new PersistenceService();
 	private SettingsModel settings;
-
-	public static SettingsService getInstance() {
-		return INSTANCE;
-	}
 
 	/**
 	 * Returns the current settings model. It will be loaded from the file system if not done yet.

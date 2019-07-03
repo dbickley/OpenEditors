@@ -6,15 +6,11 @@ import org.eclipse.jface.action.Action;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.IEditor;
-import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class PinMenuAction extends Action {
 	private static LogWrapper log = new LogWrapper( PinMenuAction.class );
 
-	EditorService editorService = EditorService.getInstance();
-	SettingsService settingsService = SettingsService.getInstance();
 	private EditorTableView editorTableView;
 
 	public PinMenuAction(EditorTableView editorTableView) {
@@ -26,13 +22,8 @@ public class PinMenuAction extends Action {
 	public void run() {
 		List<IEditor> editors = editorTableView.getSelections();
 		for( IEditor editor : editors ) {
-			try {
-				editor.setPinned( true );
-			} catch( Exception e ) {
-				log.warn( e, "Could not close editor: %s", editor.getFilePath() );
-			}
+			editor.setPinned( true );
 		}
-		settingsService.saveSettings();
 		editorTableView.refresh();
 	}
 }

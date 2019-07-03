@@ -28,15 +28,6 @@ import com.deepnoodle.openeditors.utils.IndexedEntry;
 public class EditorService {
 	private static LogWrapper log = new LogWrapper( EditorService.class );
 
-	private static EditorService instance;
-
-	public static EditorService getInstance() {
-		if( instance == null ) {
-			instance = new EditorService();
-		}
-		return instance;
-	}
-
 	public void openEditor(IEditor editor, IWorkbenchPartSite site) throws PartInitException {
 		if( editor.getReference() != null ) {
 			site.getWorkbenchWindow().getActivePage().openEditor( editor.getReference().getEditorInput(),

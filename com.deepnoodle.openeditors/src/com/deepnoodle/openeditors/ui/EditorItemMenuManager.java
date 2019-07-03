@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.ui.actions.CloseItemMenuAction;
 import com.deepnoodle.openeditors.ui.actions.OpenItemMenuAction;
 import com.deepnoodle.openeditors.ui.actions.PinMenuAction;
@@ -34,7 +35,7 @@ public class EditorItemMenuManager implements IMenuListener {
 
 	//TODO if performance issues, find a better way then rebuilding the menu everytime
 	public EditorItemMenuManager(final EditorTableView editorTableView, final IWorkbenchPartSite site,
-	    Composite parent) {
+	    Composite parent, EditorService editorService) {
 
 		this.editorTableView = editorTableView;
 		menuManager = new MenuManager() {
@@ -54,10 +55,10 @@ public class EditorItemMenuManager implements IMenuListener {
 		unPinMenuItem = new ActionContributionItem( new UnPinMenuAction( editorTableView ) );
 		menuManager.add( unPinMenuItem );
 
-		openMenuItem = new ActionContributionItem( new OpenItemMenuAction( editorTableView, site ) );
+		openMenuItem = new ActionContributionItem( new OpenItemMenuAction( editorTableView, site, editorService ) );
 		menuManager.add( openMenuItem );
 
-		closeMenuItem = new ActionContributionItem( new CloseItemMenuAction( editorTableView, site ) );
+		closeMenuItem = new ActionContributionItem( new CloseItemMenuAction( editorTableView, site, editorService ) );
 		menuManager.add( closeMenuItem );
 
 	}

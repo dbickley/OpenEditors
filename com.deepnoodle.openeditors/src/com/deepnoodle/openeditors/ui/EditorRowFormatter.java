@@ -11,27 +11,15 @@ import com.deepnoodle.openeditors.services.SettingsService;
 public class EditorRowFormatter {
 
 	private static LogWrapper log = new LogWrapper( EditorTableView.class );
-	private static EditorRowFormatter instance;
-
-	private SettingsService settingsService;
 
 	private Color dirtyColor;
 	private Color pinnedColor;
 	private Color highlightColor;
 
-	private EditorRowFormatter() {
-		settingsService = SettingsService.getInstance();
-
+	public EditorRowFormatter(SettingsService settingsService) {
 		dirtyColor = new Color( Display.getCurrent(), settingsService.getSettings().getDirtyColor() );
 		pinnedColor = new Color( Display.getCurrent(), settingsService.getSettings().getPinnedColor() );
 		highlightColor = new Color( Display.getCurrent(), settingsService.getSettings().getHighlightColor() );
-	}
-
-	public static EditorRowFormatter getInstance() {
-		if( instance == null ) {
-			instance = new EditorRowFormatter();
-		}
-		return instance;
 	}
 
 	public void formatRows(TableItem[] items, IEditor activeEditor, Color forgroundColor, Color backgroundColor) {

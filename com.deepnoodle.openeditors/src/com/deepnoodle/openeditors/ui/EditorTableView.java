@@ -39,14 +39,13 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 	 */
 	private static final int MIDDLE_MOUSE_BUTTON = 2;
 
-	private SettingsService settingsService = SettingsService.getInstance();
+	private EditorService editorService;
+	private SettingsService settingsService;
+	private EditorRowFormatter editorRowFormatter;
 
-	private EditorRowFormatter editorRowFormatter = EditorRowFormatter.getInstance();
-
-	private EditorService openEditorService = EditorService.getInstance();
+	private IViewSite viewSite;
 
 	private TableViewer tableViewer;
-	private IWorkbenchPartSite site;
 
 	private EditorComparator editorComparator;
 
@@ -54,22 +53,27 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 	private EditorItemMenuManager menuManager;
 
-	public EditorTableView(Composite parent, IWorkbenchPartSite site, IViewSite iViewSite) {
+	public EditorTableView(Composite parent, IViewSite viewSite,
+	    SettingsService settingsService, EditorService editorService, EditorRowFormatter editorRowFormatter) {
+
+		this.viewSite = viewSite;
+		this.editorService = editorService;
+		this.settingsService = settingsService;
+		this.editorRowFormatter = editorRowFormatter;
 		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
-		this.site = site;
 
 		//Build sorter
 		SortType sortBy = SortType.ACCESS;
 		editorComparator = new EditorComparator( sortBy );
 		tableViewer.setComparator( editorComparator );
 
-		tableViewer.setContentProvider( new EditorViewContentProvider() );
+		tableViewer.setContentProvider( new EditorViewContentProvider( editorService ) );
 		tableViewer.setLabelProvider( new EditorViewLabelProvider() );
-		tableViewer.setInput( iViewSite );
+		tableViewer.setInput( viewSite );
 
 		tableViewer.getControl().addMouseListener( this );
 
-		menuManager = new EditorItemMenuManager( this, site, parent );
+		menuManager = new EditorItemMenuManager( this, viewSite, parent, editorService );
 		tableViewer.getTable().setMenu( menuManager.createContextMenu( parent ) );
 
 	}
@@ -133,7 +137,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 	}
 
 	public IWorkbenchPartSite getSite() {
-		return site;
+		return viewSite;
 	}
 
 	@Override
@@ -208,7 +212,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 	private void closeEditor(IEditor editor) {
 		try {
-			openEditorService.closeEditor( editor, site );
+			editorService.closeEditor( editor, viewSite );
 		} catch( Exception e ) {
 			log.warn( e );
 		}
@@ -216,7 +220,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 	private void openEditor(IEditor editor) {
 		try {
-			openEditorService.openEditor( editor, site );
+			editorService.openEditor( editor, viewSite );
 		} catch( Exception e ) {
 			log.warn( e );
 		}

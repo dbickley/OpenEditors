@@ -8,21 +8,20 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.IEditor;
 import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class CloseItemMenuAction extends Action {
 	private static LogWrapper log = new LogWrapper( CloseItemMenuAction.class );
 
-	EditorService editorService = EditorService.getInstance();
-	SettingsService settingsService = SettingsService.getInstance();
+	EditorService editorService;
 	private EditorTableView editorTableView;
 
 	private IWorkbenchPartSite site;
 
-	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site) {
+	public CloseItemMenuAction(EditorTableView editorTableView, IWorkbenchPartSite site, EditorService editorService) {
 		this.editorTableView = editorTableView;
 		this.site = site;
+		this.editorService = editorService;
 		setText( "Close" );
 	}
 
@@ -36,8 +35,6 @@ public class CloseItemMenuAction extends Action {
 				log.warn( e, "Could not close editor: %s", editor.getFilePath() );
 			}
 		}
-
-		settingsService.saveSettings();
 		editorTableView.refresh();
 	}
 }
