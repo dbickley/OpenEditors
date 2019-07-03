@@ -6,7 +6,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.ui.EditorTableView;
 
@@ -28,8 +28,8 @@ public class OpenItemMenuAction extends Action {
 
 	@Override
 	public void run() {
-		List<IEditor> editors = editorTableView.getSelections();
-		for( IEditor editor : editors ) {
+		List<EditorModel> editors = editorTableView.getSelections();
+		for( var editor : editors ) {
 			try {
 				editorService.openEditor( editor, site );
 			} catch( Exception e ) {

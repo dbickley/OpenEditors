@@ -22,13 +22,15 @@ import org.eclipse.ui.part.FileEditorInput;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.EditorModel;
-import com.deepnoodle.openeditors.models.IEditor;
 import com.deepnoodle.openeditors.utils.IndexedEntry;
+import com.deepnoodle.openeditors.utils.ListUtils;
 
 public class EditorService {
 	private static LogWrapper log = new LogWrapper( EditorService.class );
 
-	public void openEditor(IEditor editor, IWorkbenchPartSite site) throws PartInitException {
+	private List<EditorModel> openEditors = new ArrayList<>();
+
+	public void openEditor(EditorModel editor, IWorkbenchPartSite site) throws PartInitException {
 		if( editor.getReference() != null ) {
 			site.getWorkbenchWindow().getActivePage().openEditor( editor.getReference().getEditorInput(),
 			    editor.getReference().getId() );
@@ -54,7 +56,7 @@ public class EditorService {
 		site.getWorkbenchWindow().getActivePage().openEditor( new FileEditorInput( file ), editorDescriptorId );
 	}
 
-	public void closeEditor(IEditor editor, IWorkbenchPartSite site) {
+	public void closeEditor(EditorModel editor, IWorkbenchPartSite site) {
 		IEditorPart iEditorPart = editor.getReference().getEditor( true );
 		if( iEditorPart != null ) {
 			site.getWorkbenchWindow().getActivePage().closeEditor( iEditorPart, true );
@@ -67,46 +69,34 @@ public class EditorService {
 		try {
 			if( reference.getEditorInput() != null && reference.getEditorInput() instanceof FileEditorInput ) {
 				FileEditorInput fileEditorInput = ( (FileEditorInput) reference.getEditorInput() );
-				path = fileEditorInput.getFile().getFullPath().toString();
+				if(fileEditorInput.getFile() != null) {
+					path = fileEditorInput.getFile().getFullPath().toString();
+				}
 			}
 		} catch( Exception e ) {
 			log.warn( e, "Problem getting filepath" );
 		}
-		if( path == null && reference != null ) {
-			//Last ditch effort to try and get the filename from the tooltip
-			try {
-				return reference.getEditorInput().getToolTipText();
-			} catch( Exception e ) {
-				log.warn( e, "Problem getting filepath from tooltip" );
-			}
-		}
 		return path;
 	}
 
-	public List<IEditor> buildOpenEditors() {
-		List<IEditor> openEditors = new ArrayList<>();
+	public List<EditorModel> buildOpenEditors() {
+		List<EditorModel> lastOpenEditors = new ArrayList<>( openEditors );
+		openEditors.clear();
 
+		// Loop through open editors, add them to the set or update existing onces in the set.
 		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-		// Loop through open editors, add them to the set if need be.
 		IEditorReference[] references = activePage.getEditorReferences();
 		for( IndexedEntry<IEditorReference> entryWithIndex : indexed( references ) ) {
-			IEditor editor = createEditorFromEclipseEditorReference( entryWithIndex.getEntry() );
+			IEditorReference reference = entryWithIndex.getEntry();
+			String filePath = getFilePath( reference );
+			EditorModel editor = ListUtils.findFirst( lastOpenEditors, (lastEditor) -> {
+				return filePath != null && ( filePath.equals( lastEditor.getFilePath() ) );
+			} ).orElse( new EditorModel( filePath, reference ) );
 			editor.setNaturalPosition( entryWithIndex.getIndex() );
 			openEditors.add( editor );
 		}
 
 		return openEditors;
-	}
-
-	private IEditor createEditorFromEclipseEditorReference(IEditorReference reference) {
-		String filePath = getFilePath( reference );
-		EditorModel editor = new EditorModel( filePath, reference.getName() );
-		editor.setReference( reference );
-		editor.setTitleImage( reference.getTitleImage() );
-		editor.setTitleImagePath( reference.getTitleImage().getImageData().toString() );
-		editor.setDirty( reference.isDirty() );
-		return editor;
 	}
 
 }

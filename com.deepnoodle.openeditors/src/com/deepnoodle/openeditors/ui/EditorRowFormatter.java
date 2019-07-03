@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.services.SettingsService;
 
 public class EditorRowFormatter {
@@ -22,10 +22,10 @@ public class EditorRowFormatter {
 		highlightColor = new Color( Display.getCurrent(), settingsService.getSettings().getHighlightColor() );
 	}
 
-	public void formatRows(TableItem[] items, IEditor activeEditor, Color forgroundColor, Color backgroundColor) {
+	public void formatRows(TableItem[] items, EditorModel activeEditor, Color forgroundColor, Color backgroundColor) {
 		for( TableItem item : items ) {
 			try {
-				IEditor editor = ( (IEditor) item.getData() );
+				EditorModel editor = ( (EditorModel) item.getData() );
 				if( editor.isPinned() ) {
 					item.setForeground( pinnedColor );
 				} else if( editor.isDirty() ) {

@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.models.EditorModel;
 
 class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
@@ -18,7 +18,7 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 	@Override
 	public Image getImage(Object obj) {
 		Image image = null;
-		IEditor editor = ( (IEditor) obj );
+		EditorModel editor = ( (EditorModel) obj );
 		if( editor.getReference() != null ) {
 			image = editor.getReference().getTitleImage();
 		}
@@ -34,7 +34,7 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
 		@Override
 		public String getText(Object obj) {
-			IEditor editor = ( (IEditor) obj );
+			EditorModel editor = ( (EditorModel) obj );
 			if( editor.isDirty() ) {
 				return "*" + editor.getName();
 			} else {

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -47,6 +48,10 @@ public final class ListUtils {
 	public static <T> List<T> filter(Collection<T> collection, Predicate<T> predicate) {
 		List<T> result = collection.stream().filter( predicate ).collect( Collectors.toList() );
 		return result;
+	}
+
+	public static <T> Optional<T> findFirst(Collection<T> collection, Predicate<T> predicate) {
+		return collection.stream().filter( predicate ).findFirst();
 	}
 
 	/**

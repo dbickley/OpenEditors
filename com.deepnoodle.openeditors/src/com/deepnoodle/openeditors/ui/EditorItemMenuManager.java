@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.deepnoodle.openeditors.models.IEditor;
+import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.services.EditorService;
 import com.deepnoodle.openeditors.ui.actions.CloseItemMenuAction;
 import com.deepnoodle.openeditors.ui.actions.OpenItemMenuAction;
@@ -66,7 +66,7 @@ public class EditorItemMenuManager implements IMenuListener {
 	@Override
 	public void menuAboutToShow(IMenuManager manager) {
 
-		List<IEditor> selections = editorTableView.getSelections();
+		List<EditorModel> selections = editorTableView.getSelections();
 		//TODO should I just add the ones I want or set visibility and add all?
 
 		pinMenuItem.setVisible( canPin( selections ) );
@@ -81,8 +81,8 @@ public class EditorItemMenuManager implements IMenuListener {
 
 	}
 
-	private boolean canPin(List<IEditor> editors) {
-		for( IEditor editor : editors ) {
+	private boolean canPin(List<EditorModel> editors) {
+		for( EditorModel editor : editors ) {
 			if( !editor.isPinned() ) {
 				return true;
 			}
@@ -90,8 +90,8 @@ public class EditorItemMenuManager implements IMenuListener {
 		return false;
 	}
 
-	private boolean canUnPin(List<IEditor> editors) {
-		for( IEditor editor : editors ) {
+	private boolean canUnPin(List<EditorModel> editors) {
+		for( EditorModel editor : editors ) {
 			if( editor.isPinned() ) {
 				return true;
 			}
@@ -99,11 +99,11 @@ public class EditorItemMenuManager implements IMenuListener {
 		return false;
 	}
 
-	private boolean canClose(List<IEditor> editors) {
+	private boolean canClose(List<EditorModel> editors) {
 		return true;
 	}
 
-	private boolean canOpen(List<IEditor> editors) {
+	private boolean canOpen(List<EditorModel> editors) {
 		return false;
 	}
 
