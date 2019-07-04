@@ -1,8 +1,10 @@
 package com.deepnoodle.openeditors.ui;
 
+import static com.deepnoodle.openeditors.utils.ListUtils.copy;
+
 import java.util.List;
 
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -12,22 +14,28 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.EditorComparator;
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.models.EditorModel;
-import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.services.SettingsService;
+import com.deepnoodle.openeditors.ui.EditorItemMenuManager.IEditorItemMenuManagerCallback;
 
-public class EditorTableView implements MouseListener, IPropertyListener {
+public class EditorTableView implements MouseListener, IEditorTableView {
 
 	private static LogWrapper log = new LogWrapper( EditorTableView.class );
+
+	public interface IEditorTableViewPresenter extends IEditorItemMenuManagerCallback {
+		void closeEditor(EditorModel editor);
+
+		void openEditor(EditorModel editor);
+
+		EditorModel getActiveEditor();
+
+		void setView(IEditorTableView view);
+	}
 
 	/**
 	 * Value of MouseEvent.button that represents a left mouse button.
@@ -39,9 +47,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 	 */
 	private static final int MIDDLE_MOUSE_BUTTON = 2;
 
-	private EditorService editorService;
-	private SettingsService settingsService;
-	private EditorRowFormatter editorRowFormatter;
+	private IEditorTableViewPresenter presenter;
 
 	private IViewSite viewSite;
 
@@ -49,17 +55,13 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 	private EditorComparator editorComparator;
 
-	private EditorModel activeEditor;
-
 	private EditorItemMenuManager menuManager;
 
-	public EditorTableView(Composite parent, IViewSite viewSite,
-	    SettingsService settingsService, EditorService editorService, EditorRowFormatter editorRowFormatter) {
-
+	public EditorTableView(Composite parent, IViewSite viewSite, IEditorTableViewPresenter presenter) {
 		this.viewSite = viewSite;
-		this.editorService = editorService;
-		this.settingsService = settingsService;
-		this.editorRowFormatter = editorRowFormatter;
+		this.presenter = presenter;
+		presenter.setView( this );
+
 		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
 
 		//Build sorter
@@ -67,39 +69,58 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		editorComparator = new EditorComparator( sortBy );
 		tableViewer.setComparator( editorComparator );
 
-		tableViewer.setContentProvider( new EditorViewContentProvider( editorService ) );
+		tableViewer.setContentProvider( ArrayContentProvider.getInstance() );
 		tableViewer.setLabelProvider( new EditorViewLabelProvider() );
 		tableViewer.setInput( viewSite );
 
 		tableViewer.getControl().addMouseListener( this );
 
-		menuManager = new EditorItemMenuManager( this, viewSite, parent, editorService );
+		menuManager = new EditorItemMenuManager( presenter, viewSite, parent );
 		tableViewer.getTable().setMenu( menuManager.createContextMenu( parent ) );
-
 	}
 
-	public void refresh() {
-		try {
-			if( tableViewer != null && tableViewer.getControl() != null && !tableViewer.getControl().isDisposed() ) {
-				tableViewer.refresh();
-				TableItem[] items = tableViewer.getTable().getItems();
-				tableViewer.setSelection( StructuredSelection.EMPTY );
-				editorRowFormatter.formatRows( items, activeEditor, tableViewer.getTable().getForeground(),
-				    tableViewer.getTable().getBackground() );
-			}
-		} catch( Exception e ) {
-			log.warn( e );
+	@Override
+	public void setInput(List<EditorModel> editors) {
+		List<EditorModel> sortedEditors = copy( editors );
+		sortedEditors.sort( editorComparator );
+
+		// Do not update the tableViewer if this is already the current input.
+		if( sortedEditors.equals( tableViewer.getInput() ) ) {
+			return;
 		}
+
+		tableViewer.setInput( sortedEditors );
+		//				formatRows( items, presenter.getActiveEditor(), tableViewer.getTable().getForeground(),
+		//				    tableViewer.getTable().getBackground() );
 	}
 
-	public void setSortBy(EditorComparator.SortType sortBy) {
-		editorComparator.setSortBy( sortBy );
-		settingsService.editAndSave( (settings) -> settings.setSortBy( sortBy ) );
-		refresh();
+	private void formatRows(TableItem[] items, EditorModel activeEditor) {
+		//				for( TableItem item : items ) {
+		//					try {
+		//						EditorModel editor = ( (EditorModel) item.getData() );
+		//						if( editor.isPinned() ) {
+		//							item.setForeground( pinnedColor );
+		//						} else if( editor.isDirty() ) {
+		//							item.setForeground( dirtyColor );
+		//						} else {
+		//							item.setForeground( forgroundColor );
+		//						}
+		//		
+		//						if( activeEditor != null && editor.getFilePath().equals( activeEditor.getFilePath() ) ) {
+		//							item.setBackground( highlightColor );
+		//						} else {
+		//							item.setBackground( backgroundColor );
+		//						}
+		//						item.setChecked( false );
+		//					} catch( Exception e ) {
+		//						log.warn( e );
+		//					}
+		//				}
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<EditorModel> getSelections() {
+	public List<EditorModel> getSelectedEditors() {
 		return tableViewer.getStructuredSelection().toList();
 	}
 
@@ -111,52 +132,8 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		return tableViewer.getTable();
 	}
 
-	public void setActivePart(IWorkbenchPart activePart) {
-		if( activePart == null ) {
-			setActiveEditor( null );
-			return;
-		}
-
-		TableItem[] items = tableViewer.getTable().getItems();
-		for( TableItem item : items ) {
-			EditorModel editor = ( (EditorModel) item.getData() );
-			if( editor.getReference() != null && editor.getReference().getPart( false ) == activePart ) {
-				setActiveEditor( editor );
-			}
-		}
-	}
-
-	private void setActiveEditor(EditorModel editor) {
-		if( activeEditor != null ) {
-			activeEditor.getReference().removePropertyListener( this );
-		}
-		activeEditor = editor;
-		if( activeEditor != null ) {
-			activeEditor.getReference().addPropertyListener( this );
-		}
-	}
-
 	public IWorkbenchPartSite getSite() {
 		return viewSite;
-	}
-
-	@Override
-	public void propertyChanged(Object source, int eventCode) {
-		switch( eventCode ) {
-		case ISaveablePart.PROP_DIRTY : {
-			onEditorDirtyChanged( source );
-			break;
-		}
-		}
-	}
-
-	private void onEditorDirtyChanged(Object source) {
-		refresh();
-	}
-
-	public void dispose() {
-		// Remove listener on active editor
-		setActiveEditor( null );
 	}
 
 	@Override
@@ -168,7 +145,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 
 		EditorModel clickedEditor = getClickedEditor( e );
 		if( clickedEditor != null ) {
-			openEditor( clickedEditor );
+			presenter.openEditor( clickedEditor );
 		}
 	}
 
@@ -185,7 +162,7 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		case LEFT_MOUSE_BUTTON : {
 			EditorModel clickedEditor = getClickedEditor( e );
 			if( clickedEditor != null ) {
-				openEditor( clickedEditor );
+				presenter.openEditor( clickedEditor );
 			}
 			break;
 		}
@@ -193,11 +170,21 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		case MIDDLE_MOUSE_BUTTON : {
 			EditorModel clickedEditor = getClickedEditor( e );
 			if( clickedEditor != null ) {
-				closeEditor( clickedEditor );
+				presenter.closeEditor( clickedEditor );
 			}
 			break;
 		}
 		}
+	}
+
+	@Override
+	public IViewSite getViewSite() {
+		return viewSite;
+	}
+
+	@Override
+	public EditorComparator getEditorComparator() {
+		return editorComparator;
 	}
 
 	private EditorModel getClickedEditor(MouseEvent e) {
@@ -210,19 +197,4 @@ public class EditorTableView implements MouseListener, IPropertyListener {
 		return clickedEditor;
 	}
 
-	private void closeEditor(EditorModel editor) {
-		try {
-			editorService.closeEditor( editor, viewSite );
-		} catch( Exception e ) {
-			log.warn( e );
-		}
-	}
-
-	private void openEditor(EditorModel editor) {
-		try {
-			editorService.openEditor( editor, viewSite );
-		} catch( Exception e ) {
-			log.warn( e );
-		}
-	}
 }

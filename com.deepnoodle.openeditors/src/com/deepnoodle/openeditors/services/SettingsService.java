@@ -6,14 +6,19 @@ import java.util.function.Consumer;
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.SettingsModel;
 import com.deepnoodle.openeditors.persistence.IPersistenceService;
-import com.deepnoodle.openeditors.persistence.PersistenceService;
+import com.deepnoodle.openeditors.persistence.OpenEditorsPluginPersistenceService;
 
+/**
+ * Queries, updates and persists settings.
+ * @author andre
+ *
+ */
 public class SettingsService {
 	private static LogWrapper log = new LogWrapper( SettingsService.class );
 
 	private static final String SETTINGS_FILENAME = "settings.json";
 
-	private IPersistenceService persistenceService = new PersistenceService();
+	private IPersistenceService persistenceService = new OpenEditorsPluginPersistenceService();
 	private SettingsModel settings;
 
 	/**
@@ -47,8 +52,8 @@ public class SettingsService {
 	 * and saves the settings model afterwards.
 	 */
 	public void editAndSave(Consumer<SettingsModel> consumer) {
-		log.info( "Editing settings model" );
-		consumer.accept( settings );
+		consumer.accept( getSettings() );
+		log.info( "Changed settings model: " + getSettings() );
 		saveSettings();
 	}
 }

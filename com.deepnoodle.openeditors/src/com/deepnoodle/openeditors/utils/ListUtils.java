@@ -35,6 +35,14 @@ public final class ListUtils {
 		return result;
 	}
 
+	/**
+	 * Creates a shallow copy of the given collection.
+	 */
+	public static <T> List<T> copy(Collection<T> collection) {
+		var copy = new ArrayList<>( collection );
+		return copy;
+	}
+
 	public static <T, R> List<R> map(T[] collection, Function<T, R> mapper) {
 		List<R> result = Arrays.stream( collection ).map( mapper ).collect( Collectors.toList() );
 		return result;

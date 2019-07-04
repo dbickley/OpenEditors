@@ -9,38 +9,31 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import com.deepnoodle.openeditors.models.EditorComparator;
-import com.deepnoodle.openeditors.services.EditorService;
+import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.actions.SortAction;
 
 public class OpenEditorsMainView extends ViewPart {
 
-	private EditorTableView editorTableView;
-
-	private PartListener partListener;
-
-	private EditorService editorService;
-	private SettingsService settingsService;
-	private EditorRowFormatter editorRowFormatter;
+	private EditorPresenter editorPresenter;
 
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
-		editorService = new EditorService();
-		settingsService = new SettingsService();
-		editorRowFormatter = new EditorRowFormatter( settingsService );
-		editorTableView =
-		    new EditorTableView( parent, getViewSite(), settingsService, editorService, editorRowFormatter );
-		partListener = new PartListener( editorTableView );
+		EclipseEditorService editorService = new EclipseEditorService();
+		SettingsService settingsService = new SettingsService();
+		editorPresenter = new EditorPresenter( editorService, settingsService );
+		EditorTableView editorTableView = new EditorTableView( parent, getViewSite(), editorPresenter );
 
-		getSite().getWorkbenchWindow().getPartService().addPartListener( partListener );
+		// Listen to opened and closed editors
+		getSite().getWorkbenchWindow().getPartService().addPartListener( editorPresenter );
 
 		// @formatter:off
-		Action sortByNameAction = new SortAction(editorTableView,
+		Action sortByNameAction = new SortAction(editorPresenter,
 			EditorComparator.SortType.NAME,
 			"Sort by Name",
 			"Sorts the tabs by name");
-		Action sortByPathAction = new SortAction(editorTableView,
+		Action sortByPathAction = new SortAction(editorPresenter,
 			EditorComparator.SortType.PATH,
 			"Sort by Path",
 			"Sorts the tabs by full path");
@@ -60,7 +53,7 @@ public class OpenEditorsMainView extends ViewPart {
 	@Override
 	public void dispose() {
 		// Remove all listeners
-		getSite().getWorkbenchWindow().getPartService().removePartListener( partListener );
-		editorTableView.dispose();
+		getSite().getWorkbenchWindow().getPartService().removePartListener( editorPresenter );
+		editorPresenter.dispose();
 	}
 }

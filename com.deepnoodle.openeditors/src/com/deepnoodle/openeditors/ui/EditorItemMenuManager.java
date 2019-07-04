@@ -1,7 +1,6 @@
 package com.deepnoodle.openeditors.ui;
 
-import java.util.List;
-
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -11,104 +10,78 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchPartSite;
 
-import com.deepnoodle.openeditors.models.EditorModel;
-import com.deepnoodle.openeditors.services.EditorService;
-import com.deepnoodle.openeditors.ui.actions.CloseItemMenuAction;
-import com.deepnoodle.openeditors.ui.actions.OpenItemMenuAction;
-import com.deepnoodle.openeditors.ui.actions.PinMenuAction;
-import com.deepnoodle.openeditors.ui.actions.UnPinMenuAction;
-
 public class EditorItemMenuManager implements IMenuListener {
-	//private static LogWrapper log = new LogWrapper(EditorItemMenuManager.class);
 
-	private EditorTableView editorTableView;
-
-	private ActionContributionItem pinMenuItem;
-
-	private ActionContributionItem unPinMenuItem;
-
-	private ActionContributionItem openMenuItem;
-
-	private ActionContributionItem closeMenuItem;
+	private IEditorItemMenuManagerCallback callback;
 
 	private MenuManager menuManager;
 
+	private ActionContributionItem pinMenuItem;
+	private ActionContributionItem unPinMenuItem;
+	private ActionContributionItem closeMenuItem;
+
+	public interface IEditorItemMenuManagerCallback {
+		void onCloseSelectedEditors();
+
+		void onPinSelectedEditors();
+
+		void onUnPinSelectedEditors();
+
+		boolean canPinSelectedEditors();
+
+		boolean canUnPinSelectedEditors();
+	}
+	
 	//TODO if performance issues, find a better way then rebuilding the menu everytime
-	public EditorItemMenuManager(final EditorTableView editorTableView, final IWorkbenchPartSite site,
-	    Composite parent, EditorService editorService) {
+	public EditorItemMenuManager(IEditorItemMenuManagerCallback callback, final IWorkbenchPartSite site,
+	    Composite parent) {
 
-		this.editorTableView = editorTableView;
-		menuManager = new MenuManager() {
+		this.callback = callback;
 
-			@Override
-			public void fill(Menu parent, int index) {
-				super.fill( parent, index );
-			}
-
-		};
+		menuManager = new MenuManager();
 		menuManager.addMenuListener( this );
 		menuManager.setRemoveAllWhenShown( true );
 
-		pinMenuItem = new ActionContributionItem( new PinMenuAction( editorTableView ) );
+		pinMenuItem = new ActionContributionItem( new EditorItemMenuAction( "Pin", callback::onPinSelectedEditors ) );
 		menuManager.add( pinMenuItem );
 
-		unPinMenuItem = new ActionContributionItem( new UnPinMenuAction( editorTableView ) );
+		unPinMenuItem =
+		    new ActionContributionItem( new EditorItemMenuAction( "Un-Pin", callback::onUnPinSelectedEditors ) );
 		menuManager.add( unPinMenuItem );
 
-		openMenuItem = new ActionContributionItem( new OpenItemMenuAction( editorTableView, site, editorService ) );
-		menuManager.add( openMenuItem );
-
-		closeMenuItem = new ActionContributionItem( new CloseItemMenuAction( editorTableView, site, editorService ) );
+		closeMenuItem =
+		    new ActionContributionItem( new EditorItemMenuAction( "Close", callback::onCloseSelectedEditors ) );
 		menuManager.add( closeMenuItem );
-
 	}
 
 	@Override
 	public void menuAboutToShow(IMenuManager manager) {
 
-		List<EditorModel> selections = editorTableView.getSelections();
 		//TODO should I just add the ones I want or set visibility and add all?
-
-		pinMenuItem.setVisible( canPin( selections ) );
-		unPinMenuItem.setVisible( canUnPin( selections ) );
-		openMenuItem.setVisible( canOpen( selections ) );
-		closeMenuItem.setVisible( canClose( selections ) );
+		pinMenuItem.setVisible( callback.canPinSelectedEditors() );
+		unPinMenuItem.setVisible( callback.canUnPinSelectedEditors() );
 
 		menuManager.add( pinMenuItem );
 		menuManager.add( unPinMenuItem );
-		menuManager.add( openMenuItem );
 		menuManager.add( closeMenuItem );
-
-	}
-
-	private boolean canPin(List<EditorModel> editors) {
-		for( EditorModel editor : editors ) {
-			if( !editor.isPinned() ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean canUnPin(List<EditorModel> editors) {
-		for( EditorModel editor : editors ) {
-			if( editor.isPinned() ) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean canClose(List<EditorModel> editors) {
-		return true;
-	}
-
-	private boolean canOpen(List<EditorModel> editors) {
-		return false;
 	}
 
 	public Menu createContextMenu(Control parent) {
 		return menuManager.createContextMenu( parent );
+	}
+
+	private static class EditorItemMenuAction extends Action {
+
+		Runnable runnable;
+
+		EditorItemMenuAction(String title, Runnable runnable) {
+			setText( title );
+		}
+
+		@Override
+		public void run() {
+			runnable.run();
+		}
 	}
 
 }

@@ -3,14 +3,17 @@ package com.deepnoodle.openeditors.ui.actions;
 import org.eclipse.jface.action.Action;
 
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
-import com.deepnoodle.openeditors.ui.EditorTableView;
 
 public class SortAction extends Action {
-	protected EditorTableView editorTableView;
+	protected ISortActionCallback callback;
 	protected SortType sortType;
 
-	public SortAction(EditorTableView editorTableView, SortType sortType, String text, String tooltip) {
-		this.editorTableView = editorTableView;
+	public interface ISortActionCallback {
+		void setSortBy(SortType sortType);
+	}
+
+	public SortAction(ISortActionCallback callback, SortType sortType, String text, String tooltip) {
+		this.callback = callback;
 		this.sortType = sortType;
 		setText( text );
 		setToolTipText( tooltip );
@@ -18,8 +21,7 @@ public class SortAction extends Action {
 
 	@Override
 	public void run() {
-		editorTableView.setSortBy( sortType );
-		editorTableView.refresh();
+		callback.setSortBy( sortType );
 	}
 
 }

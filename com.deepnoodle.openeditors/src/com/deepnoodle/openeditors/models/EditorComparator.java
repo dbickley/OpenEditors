@@ -1,9 +1,11 @@
 package com.deepnoodle.openeditors.models;
 
+import java.util.Comparator;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 
-public class EditorComparator extends ViewerComparator {
+public class EditorComparator extends ViewerComparator implements Comparator<EditorModel> {
 	public enum SortType {
 		ACCESS, NATURAL, NAME, PATH
 	}
@@ -19,6 +21,11 @@ public class EditorComparator extends ViewerComparator {
 		EditorModel editor1 = (EditorModel) e1;
 		EditorModel editor2 = (EditorModel) e2;
 
+		return compare( editor1, editor2 );
+	}
+
+	@Override
+	public int compare(EditorModel editor1, EditorModel editor2) {
 		int compare = Boolean.compare( editor2.isPinned(), editor1.isPinned() );
 		if( compare == 0 ) {
 			switch( sortBy ) {
