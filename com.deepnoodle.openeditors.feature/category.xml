@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="com.deepnoodle.openeditors.feature">
+      <category name="com.deepnoodle.openeditors.category"/>
+   </feature>
+   <category-def name="com.deepnoodle.openeditors.category" label="Open Editors"/>
+</site>
