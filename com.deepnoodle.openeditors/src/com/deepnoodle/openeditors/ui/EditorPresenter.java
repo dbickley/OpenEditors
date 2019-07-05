@@ -2,6 +2,7 @@ package com.deepnoodle.openeditors.ui;
 
 import static com.deepnoodle.openeditors.utils.ListUtils.copy;
 
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.ui.IPartListener;
@@ -17,11 +18,10 @@ import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 import com.deepnoodle.openeditors.ui.EditorItemMenuManager.IEditorItemMenuManagerCallback;
 import com.deepnoodle.openeditors.ui.EditorTableView.IEditorTableViewPresenter;
-import com.deepnoodle.openeditors.ui.actions.SortAction.ISortActionCallback;
 import com.deepnoodle.openeditors.utils.ListUtils;
 
 public class EditorPresenter
-    implements IEditorTableViewPresenter, IEditorItemMenuManagerCallback, ISortActionCallback, IPartListener,
+    implements IEditorTableViewPresenter, IEditorItemMenuManagerCallback, IPartListener,
     IPropertyListener {
 
 	private static LogWrapper log = new LogWrapper( EditorPresenter.class );
@@ -42,13 +42,6 @@ public class EditorPresenter
 	@Override
 	public void setView(IEditorTableView view) {
 		this.view = view;
-	}
-
-	@Override
-	public void setSortBy(EditorComparator.SortType sortBy) {
-		settingsService.editAndSave( (settings) -> settings.setSortBy( sortBy ) );
-		getOrCreateEditorComparator().setSortBy( sortBy );
-		refresh();
 	}
 
 	@Override
@@ -146,6 +139,12 @@ public class EditorPresenter
 		}
 	}
 
+	public void setSortBy(EditorComparator.SortType sortBy) {
+		settingsService.editAndSave( (settings) -> settings.setSortBy( sortBy ) );
+		getOrCreateEditorComparator().setSortBy( sortBy );
+		refresh();
+	}
+
 	public void dispose() {
 		// Remove listener on active editor
 		setActiveEditor( null );
@@ -187,6 +186,7 @@ public class EditorPresenter
 		activeEditor = editor;
 		if( activeEditor != null ) {
 			activeEditor.getReference().addPropertyListener( this );
+			activeEditor.setLastAccessTime( new Date() );
 		}
 	}
 

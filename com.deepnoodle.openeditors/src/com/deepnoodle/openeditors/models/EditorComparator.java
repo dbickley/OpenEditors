@@ -19,7 +19,7 @@ public class EditorComparator implements Comparator<EditorModel> {
 		if( compare == 0 ) {
 			switch( sortBy ) {
 			case ACCESS :
-				compare = compare( editor2.getHistoryPosition(), editor1.getHistoryPosition() );
+				compare = compare( editor2.getLastAccessTime(), editor1.getLastAccessTime() );
 				break;
 			case NATURAL :
 				compare = compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );

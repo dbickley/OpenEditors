@@ -1,5 +1,7 @@
 package com.deepnoodle.openeditors.models;
 
+import java.util.Date;
+
 import org.eclipse.ui.IEditorReference;
 
 public class EditorModel {
@@ -12,6 +14,7 @@ public class EditorModel {
 	private transient boolean dirty = false;
 	private transient Integer historyPosition = Integer.MAX_VALUE;
 	private transient IEditorReference reference;
+	private transient Date lastAccessTime;
 
 	public EditorModel(String filePath, IEditorReference reference) {
 		this.filePath = filePath;
@@ -83,5 +86,13 @@ public class EditorModel {
 	public void setReference(IEditorReference reference) {
 		this.reference = reference;
 
+	}
+
+	public Date getLastAccessTime() {
+		return lastAccessTime;
+	}
+
+	public void setLastAccessTime(Date lastAccessTime) {
+		this.lastAccessTime = lastAccessTime;
 	}
 }

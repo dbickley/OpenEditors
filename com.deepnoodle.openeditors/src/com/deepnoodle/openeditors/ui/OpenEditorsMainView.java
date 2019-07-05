@@ -9,9 +9,9 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import com.deepnoodle.openeditors.models.EditorComparator;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
-import com.deepnoodle.openeditors.ui.actions.SortAction;
 
 public class OpenEditorsMainView extends ViewPart {
 
@@ -28,21 +28,21 @@ public class OpenEditorsMainView extends ViewPart {
 		// Listen to opened and closed editors
 		getSite().getWorkbenchWindow().getPartService().addPartListener( editorPresenter );
 
-		// @formatter:off
-		Action sortByNameAction = new SortAction(editorPresenter,
-			EditorComparator.SortType.NAME,
-			"Sort by Name",
-			"Sorts the tabs by name");
-		Action sortByPathAction = new SortAction(editorPresenter,
-			EditorComparator.SortType.PATH,
-			"Sort by Path",
-			"Sorts the tabs by full path");
-		// @formatter:on
+		Action sortByNameAction =
+		    createSortAction( EditorComparator.SortType.NAME, "Sort by Name", "Sorts the editors by name" );
+		Action sortByPathAction =
+		    createSortAction( EditorComparator.SortType.PATH, "Sort by Path", "Sorts the editors by full path" );
+		Action sortByAccessAction = createSortAction( EditorComparator.SortType.ACCESS, "Sort by Access",
+		    "Sorts the editors by the last access time" );
+		Action sortByNaturalAction = createSortAction( EditorComparator.SortType.NATURAL, "Sort by Tab Order",
+		    "Sorts the editors in the order of the corresponding tabs" );
 
 		IActionBars bars = getViewSite().getActionBars();
 		IMenuManager menuManager = bars.getMenuManager();
 		menuManager.add( sortByNameAction );
 		menuManager.add( sortByPathAction );
+		menuManager.add( sortByAccessAction );
+		menuManager.add( sortByNaturalAction );
 	}
 
 	@Override
@@ -55,5 +55,21 @@ public class OpenEditorsMainView extends ViewPart {
 		// Remove all listeners
 		getSite().getWorkbenchWindow().getPartService().removePartListener( editorPresenter );
 		editorPresenter.dispose();
+	}
+
+	public interface ISortActionCallback {
+		void setSortBy(SortType sortType);
+	}
+
+	private Action createSortAction(SortType sortType, String title, String tooltip) {
+		Action sortAction = new Action() {
+			@Override
+			public void run() {
+				editorPresenter.setSortBy( sortType );
+			}
+		};
+		sortAction.setText( title );
+		sortAction.setToolTipText( tooltip );
+		return sortAction;
 	}
 }
