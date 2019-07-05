@@ -1,5 +1,7 @@
 package com.deepnoodle.openeditors.ui;
 
+import static com.deepnoodle.openeditors.utils.ListUtils.copy;
+
 import java.util.List;
 
 import org.eclipse.ui.IPartListener;
@@ -28,6 +30,8 @@ public class EditorPresenter
 	private EclipseEditorService editorService;
 	private IEditorTableView view;
 
+	private EditorComparator editorComparator;
+
 	private EditorModel activeEditor;
 
 	public EditorPresenter(EclipseEditorService editorService, SettingsService settingsService) {
@@ -43,7 +47,7 @@ public class EditorPresenter
 	@Override
 	public void setSortBy(EditorComparator.SortType sortBy) {
 		settingsService.editAndSave( (settings) -> settings.setSortBy( sortBy ) );
-		view.getEditorComparator().setSortBy( sortBy );
+		getOrCreateEditorComparator().setSortBy( sortBy );
 		refresh();
 	}
 
@@ -148,8 +152,14 @@ public class EditorPresenter
 	}
 
 	public void refresh() {
-		List<EditorModel> editors = editorService.getOpenEditors();
-		view.setInput( editors );
+		view.refresh();
+	}
+
+	private EditorComparator getOrCreateEditorComparator() {
+		if( editorComparator == null ) {
+			editorComparator = new EditorComparator( settingsService.getSettings().getSortBy() );
+		}
+		return editorComparator;
 	}
 
 	private void onEditorDirtyChanged(Object source) {
@@ -178,5 +188,14 @@ public class EditorPresenter
 		if( activeEditor != null ) {
 			activeEditor.getReference().addPropertyListener( this );
 		}
+	}
+
+	@Override
+	public List<EditorModel> getSortedEditors() {
+		List<EditorModel> editors = editorService.getOpenEditors();
+		EditorComparator editorComparator = getOrCreateEditorComparator();
+		List<EditorModel> sortedEditors = copy( editors );
+		sortedEditors.sort( editorComparator );
+		return sortedEditors;
 	}
 }

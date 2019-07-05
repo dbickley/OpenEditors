@@ -1,10 +1,7 @@
 package com.deepnoodle.openeditors.ui;
 
-import static com.deepnoodle.openeditors.utils.ListUtils.copy;
-
 import java.util.List;
 
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -18,8 +15,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
-import com.deepnoodle.openeditors.models.EditorComparator;
-import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.ui.EditorItemMenuManager.IEditorItemMenuManagerCallback;
 
@@ -35,6 +30,8 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		EditorModel getActiveEditor();
 
 		void setView(IEditorTableView view);
+
+		List<EditorModel> getSortedEditors();
 	}
 
 	/**
@@ -53,23 +50,15 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 
 	private TableViewer tableViewer;
 
-	private EditorComparator editorComparator;
-
 	private EditorItemMenuManager menuManager;
 
 	public EditorTableView(Composite parent, IViewSite viewSite, IEditorTableViewPresenter presenter) {
 		this.viewSite = viewSite;
 		this.presenter = presenter;
 		presenter.setView( this );
-
 		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
 
-		//Build sorter
-		SortType sortBy = SortType.ACCESS;
-		editorComparator = new EditorComparator( sortBy );
-		tableViewer.setComparator( editorComparator );
-
-		tableViewer.setContentProvider( ArrayContentProvider.getInstance() );
+		tableViewer.setContentProvider( new EditorContentProvider( presenter ) );
 		tableViewer.setLabelProvider( new EditorViewLabelProvider() );
 		tableViewer.setInput( viewSite );
 
@@ -80,18 +69,8 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 	}
 
 	@Override
-	public void setInput(List<EditorModel> editors) {
-		List<EditorModel> sortedEditors = copy( editors );
-		sortedEditors.sort( editorComparator );
-
-		// Do not update the tableViewer if this is already the current input.
-		if( sortedEditors.equals( tableViewer.getInput() ) ) {
-			return;
-		}
-
-		tableViewer.setInput( sortedEditors );
-		//				formatRows( items, presenter.getActiveEditor(), tableViewer.getTable().getForeground(),
-		//				    tableViewer.getTable().getBackground() );
+	public void refresh() {
+		tableViewer.refresh();
 	}
 
 	private void formatRows(TableItem[] items, EditorModel activeEditor) {
@@ -180,11 +159,6 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 	@Override
 	public IViewSite getViewSite() {
 		return viewSite;
-	}
-
-	@Override
-	public EditorComparator getEditorComparator() {
-		return editorComparator;
 	}
 
 	private EditorModel getClickedEditor(MouseEvent e) {

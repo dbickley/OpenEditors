@@ -2,26 +2,15 @@ package com.deepnoodle.openeditors.models;
 
 import java.util.Comparator;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-
-public class EditorComparator extends ViewerComparator implements Comparator<EditorModel> {
+public class EditorComparator implements Comparator<EditorModel> {
 	public enum SortType {
 		ACCESS, NATURAL, NAME, PATH
 	}
 
-	private SortType sortBy = SortType.PATH;
+	private SortType sortBy;
 
 	public EditorComparator(SortType sortBy) {
 		this.sortBy = sortBy;
-	}
-
-	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		EditorModel editor1 = (EditorModel) e1;
-		EditorModel editor2 = (EditorModel) e2;
-
-		return compare( editor1, editor2 );
 	}
 
 	@Override
