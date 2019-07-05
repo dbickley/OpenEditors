@@ -10,6 +10,22 @@
             <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20190602212107/repository"/>
             <unit id="com.google.gson" version="2.2.4.v201311231704"/>
             <unit id="com.google.gson.source" version="2.2.4.v201311231704"/>
+            <unit id="org.junit.jupiter.api" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.jupiter.api.source" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.jupiter.engine" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.jupiter.engine.source" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.jupiter.params" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.jupiter.params.source" version="5.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.commons" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.commons.source" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.engine" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.engine.source" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.launcher" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.launcher.source" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.runner" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.runner.source" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.suite.api" version="1.4.0.v20190212-2109"/>
+            <unit id="org.junit.platform.suite.api.source" version="1.4.0.v20190212-2109"/>
         </location>
     </locations>
 </target>

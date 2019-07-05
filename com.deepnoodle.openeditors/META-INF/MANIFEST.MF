@@ -17,4 +17,11 @@ Import-Package: javax.annotation;version="1.2.0",
 Bundle-ClassPath: .
 Bundle-Activator: com.deepnoodle.openeditors.Activator
 Bundle-ActivationPolicy: lazy
+Export-Package: com.deepnoodle.openeditors,
+ com.deepnoodle.openeditors.logging,
+ com.deepnoodle.openeditors.models,
+ com.deepnoodle.openeditors.persistence,
+ com.deepnoodle.openeditors.services,
+ com.deepnoodle.openeditors.ui,
+ com.deepnoodle.openeditors.utils
 
