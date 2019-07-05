@@ -25,6 +25,8 @@ public class SettingsService {
 	 * Returns the current settings model. It will be loaded from the file system if not done yet.
 	 * If there is no persisted settings model that can be loaded,
 	 * then a new default settings model is returned.
+	 * <br><br>
+	 * This method is intended for reading the settings. To change settings use {@link #editAndSave}.
 	 * @return
 	 */
 	public SettingsModel getSettings() {
@@ -40,20 +42,12 @@ public class SettingsService {
 	}
 
 	/**
-	 * Saves the current settings model to the file system.
-	 */
-	public void saveSettings() {
-		log.info( "Saving settings model" );
-		persistenceService.save( SETTINGS_FILENAME, settings );
-	}
-
-	/**
 	 * Runs the consumer on the current settings model (e.g. to call its setters)
 	 * and saves the settings model afterwards.
 	 */
 	public void editAndSave(Consumer<SettingsModel> consumer) {
 		consumer.accept( getSettings() );
-		log.info( "Changed settings model: " + getSettings() );
-		saveSettings();
+		log.info( "Saving changed settings model: " + getSettings() );
+		persistenceService.save( SETTINGS_FILENAME, settings );
 	}
 }
