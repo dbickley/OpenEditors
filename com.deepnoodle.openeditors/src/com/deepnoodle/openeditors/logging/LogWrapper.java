@@ -11,7 +11,11 @@ public class LogWrapper {
 	private Class<?> clazz;
 
 	public LogWrapper(Class<?> clazz) {
-		log = Activator.getDefault().getLog();
+		if( Activator.getDefault() != null ) {
+			log = Activator.getDefault().getLog();
+		} else {
+			log = new LogToStdStream();
+		}
 		this.clazz = clazz;
 	}
 

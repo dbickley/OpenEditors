@@ -2,12 +2,13 @@ package com.deepnoodle.openeditors.ui;
 
 import static com.deepnoodle.openeditors.utils.ListUtils.copy;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.ISaveablePart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.EditorPart;
 
@@ -26,6 +27,8 @@ public class EditorPresenter
 
 	private static LogWrapper log = new LogWrapper( EditorPresenter.class );
 
+	private static List<IOpenEditorsChangedListener> openEditorsChangedListeners = new ArrayList<>();
+
 	private SettingsService settingsService;
 	private EclipseEditorService editorService;
 	private IEditorTableView view;
@@ -33,6 +36,7 @@ public class EditorPresenter
 	private EditorComparator editorComparator;
 
 	private EditorModel activeEditor;
+	private EditorPart editorPartOfActiveEditor;
 
 	public EditorPresenter(EclipseEditorService editorService, SettingsService settingsService) {
 		this.editorService = editorService;
@@ -93,35 +97,42 @@ public class EditorPresenter
 
 	@Override
 	public void partActivated(IWorkbenchPart part) {
-		if( part instanceof EditorPart ) {
-			setActivePart( part );
-			refresh();
-		}
+		// Do nothing here. partBroughtToTop or partOpened is called afterwards.
 	}
 
 	@Override
 	public void partClosed(IWorkbenchPart part) {
 		if( part instanceof EditorPart ) {
+			if( editorPartOfActiveEditor == part ) {
+				setActivePart( null );
+			}
 			refresh();
 		}
 	}
 
 	@Override
 	public void partOpened(IWorkbenchPart part) {
-		// Do nothing here. partBroughtToTop or partActivated will be called afterwards.
+		if( part instanceof EditorPart ) {
+			setActivePart( (EditorPart) part );
+			refresh();
+		}
 	}
 
 	@Override
 	public void partBroughtToTop(IWorkbenchPart part) {
 		if( part instanceof EditorPart ) {
+			setActivePart( (EditorPart) part );
 			refresh();
 		}
-
 	}
 
 	@Override
 	public void partDeactivated(IWorkbenchPart part) {
-		setActivePart( null );
+		if( part instanceof EditorPart ) {
+			if( editorPartOfActiveEditor == part ) {
+				setActivePart( null );
+			}
+		}
 	}
 
 	@Override
@@ -132,7 +143,7 @@ public class EditorPresenter
 	@Override
 	public void propertyChanged(Object source, int eventCode) {
 		switch( eventCode ) {
-		case ISaveablePart.PROP_DIRTY : {
+		case IEditorPart.PROP_DIRTY : {
 			onEditorDirtyChanged( source );
 			break;
 		}
@@ -165,16 +176,17 @@ public class EditorPresenter
 		refresh();
 	}
 
-	private void setActivePart(IWorkbenchPart activePart) {
-		if( activePart == null ) {
+	private void setActivePart(EditorPart part) {
+		if( part == null ) {
 			setActiveEditor( null );
 			return;
 		}
 
 		List<EditorModel> editors = editorService.getOpenEditors();
 		for( var editor : editors ) {
-			if( editor.getReference() != null && editor.getReference().getPart( false ) == activePart ) {
+			if( editor.getReference() != null && editor.getReference().getPart( false ) == part ) {
 				setActiveEditor( editor );
+				editorPartOfActiveEditor = part;
 			}
 		}
 	}
@@ -192,10 +204,32 @@ public class EditorPresenter
 
 	@Override
 	public List<EditorModel> getSortedEditors() {
-		List<EditorModel> editors = editorService.getOpenEditors();
 		EditorComparator editorComparator = getOrCreateEditorComparator();
+		List<EditorModel> editors = queryOpenEditors();
 		List<EditorModel> sortedEditors = copy( editors );
 		sortedEditors.sort( editorComparator );
 		return sortedEditors;
+	}
+
+	@Override
+	public void onEditorContentProviderGetElementsCalled(List<EditorModel> editors) {
+		openEditorsChangedListeners.forEach( (it) -> it.onOpenEditorsChanged( editors ) );
+	}
+
+	@Override
+	public void addOpenEditorsChangedListener(IOpenEditorsChangedListener listener) {
+		openEditorsChangedListeners.add( listener );
+	}
+
+	@Override
+	public void removeOpenEditorsChangedListener(IOpenEditorsChangedListener listener) {
+		openEditorsChangedListeners.remove( listener );
+	}
+
+	private List<EditorModel> queryOpenEditors() {
+		// Get the open editors in the Eclipse workbench
+		List<EditorModel> editors = editorService.getOpenEditors();
+		// TODO: Update their data based on stored settings (e.g. pinned state, lastAccessTime)
+		return editors;
 	}
 }

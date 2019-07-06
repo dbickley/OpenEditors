@@ -35,16 +35,23 @@ public class EclipseEditorService {
 
 		try {
 			// Loop through open editors in Eclipse workbench.
-			// For each one: update associated EditorModel or create a new EditorModel if none yet.
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			IEditorReference[] references = activePage.getEditorReferences();
 			for( IndexedEntry<IEditorReference> entryWithIndex : indexed( references ) ) {
 				IEditorReference reference = entryWithIndex.getEntry();
-				String filePath = getFilePath( reference );
+
+				// Find existing EditorModel or create a new EditorModel if none yet.
 				EditorModel editor = ListUtils.findFirst( lastOpenEditors, (lastEditor) -> {
 					return ( reference == lastEditor.getReference() );
-				} ).orElse( new EditorModel( filePath, reference ) );
+				} ).orElse( new EditorModel( reference ) );
+
+				// Update the data of the editor
 				editor.setNaturalPosition( entryWithIndex.getIndex() );
+				editor.setDirty( reference.isDirty() );
+				String filePath = getFilePath( reference );
+				editor.setFilePath( filePath );
+				editor.setName( reference.getName() );
+
 				openEditors.add( editor );
 			}
 		} catch( Exception e ) {

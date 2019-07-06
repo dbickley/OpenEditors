@@ -14,6 +14,8 @@ public class EditorContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		return presenter.getSortedEditors().toArray();
+		var editors = presenter.getSortedEditors();
+		presenter.onEditorContentProviderGetElementsCalled( editors );
+		return editors.toArray();
 	}
 }

@@ -5,22 +5,18 @@ import java.util.Date;
 import org.eclipse.ui.IEditorReference;
 
 public class EditorModel {
-	private String filePath;
+	private IEditorReference reference;
 	private String name;
-	private boolean pinned;
+
+	private String filePath;
+	private boolean dirty;
 	private Integer naturalPosition;
 
-	//These are not saved
-	private transient boolean dirty = false;
-	private transient Integer historyPosition = Integer.MAX_VALUE;
-	private transient IEditorReference reference;
-	private transient Date lastAccessTime;
+	private boolean pinned;
+	private Date lastAccessTime;
 
-	public EditorModel(String filePath, IEditorReference reference) {
-		this.filePath = filePath;
+	public EditorModel(IEditorReference reference) {
 		this.reference = reference;
-		name = reference.getName();
-		dirty = reference.isDirty();
 	}
 
 	@Override
@@ -65,14 +61,6 @@ public class EditorModel {
 
 	public void setNaturalPosition(Integer naturalPosition) {
 		this.naturalPosition = naturalPosition;
-	}
-
-	public Integer getHistoryPosition() {
-		return historyPosition;
-	}
-
-	public void setHistoryPosition(Integer historyPosition) {
-		this.historyPosition = historyPosition;
 	}
 
 	public boolean isDirty() {

@@ -2,6 +2,7 @@ package com.deepnoodle.openeditors.ui;
 
 import java.util.List;
 
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -32,6 +33,12 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		void setView(IEditorTableView view);
 
 		List<EditorModel> getSortedEditors();
+
+		void onEditorContentProviderGetElementsCalled(List<EditorModel> editors);
+
+		void addOpenEditorsChangedListener(IOpenEditorsChangedListener listener);
+
+		void removeOpenEditorsChangedListener(IOpenEditorsChangedListener listener);
 	}
 
 	/**
@@ -58,9 +65,16 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		presenter.setView( this );
 		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
 
-		tableViewer.setContentProvider( new EditorContentProvider( presenter ) );
-		tableViewer.setLabelProvider( new EditorViewLabelProvider() );
+		var editorLabelProvider = new EditorViewLabelProvider( presenter );
+		var editorContentProvider = new EditorContentProvider( presenter );
+		presenter.addOpenEditorsChangedListener( editorLabelProvider );
+		tableViewer.setLabelProvider( editorLabelProvider );
+		tableViewer.setContentProvider( editorContentProvider );
+		// TODO: can I set null as input?
 		tableViewer.setInput( viewSite );
+
+		// Enable tool tips
+		ColumnViewerToolTipSupport.enableFor( tableViewer );
 
 		tableViewer.getControl().addMouseListener( this );
 
