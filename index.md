@@ -1,5 +1,3 @@
-Open Editors is an Eclipse plugin. It adds a view that shows all open editors in a vertical list.
-
 ## Features
 * Sort the list by several properties.
 <br /><img src="web-assets/sort-sequence-dialog.png">
