@@ -2,7 +2,7 @@
 <feature
       id="com.deepnoodle.openeditors.feature"
       label="Open Editors"
-      version="0.91.0.qualifier"
+      version="0.99.0.qualifier"
       provider-name="https://github.com/dbickley/OpenEditors">
 
    <description url="http://www.example.com/description">
