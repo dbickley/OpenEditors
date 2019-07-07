@@ -2,6 +2,7 @@ package com.deepnoodle.openeditors.ui;
 
 import static com.deepnoodle.openeditors.utils.ListUtils.filter;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +11,14 @@ import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -52,6 +57,9 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 	}
 
 	private static class EditorStyledLabelProvider extends LabelProvider implements IStyledLabelProvider {
+
+		private static final RGB PINNED_COLOR = hexToRGB( "#E80C2E" );
+
 		private Map<EditorModel, EditorLabelData> editorToLabelDataMap = new HashMap<>();
 
 		IEditorTableViewPresenter presenter;
@@ -94,16 +102,43 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 					str.append( editorLabelData.folderLabel + "/", StyledString.QUALIFIER_STYLER );
 				}
 				if( editorLabelData.fileLabel != null ) {
-					if( editor.isDirty() ) {
-						str.append( "*" );
+					// Add asterisk for dirty editors
+					String fileLabel = ( editor.isDirty() ? "*" : "" ) + editorLabelData.fileLabel;
+
+					List<Styler> fileLabelStylers = new ArrayList<>();
+					// Give pinned editors another color
+					if( editor.isPinned() ) {
+						fileLabelStylers.add( getPinnedColorStyler() );
 					}
-					str.append( editorLabelData.fileLabel );
+
+					str.append( fileLabel, new CompositeStyler( fileLabelStylers ) );
 				}
 				return str;
 			} catch( Exception e ) {
 				log.error( e );
 				return new StyledString( editor.getName() );
 			}
+		}
+
+		private static Styler getPinnedColorStyler() {
+			var styler = new Styler() {
+				@Override
+				public void applyStyles(TextStyle textStyle) {
+					// Add or update the color in the registry.
+					// This way, there is at most one instance, so a missing dispose is irrelevant.
+					JFaceResources.getColorRegistry().put( "com.deepnoodle.openeditors.pinnedColor", PINNED_COLOR );
+					textStyle.foreground =
+					    JFaceResources.getColorRegistry().get( "com.deepnoodle.openeditors.pinnedColor" );
+				}
+			};
+			return styler;
+		}
+
+		private static RGB hexToRGB(String hexColor) {
+			int r = Integer.valueOf( hexColor.substring( 1, 3 ), 16 );
+			int g = Integer.valueOf( hexColor.substring( 3, 5 ), 16 );
+			int b = Integer.valueOf( hexColor.substring( 5, 7 ), 16 );
+			return new RGB( r, g, b );
 		}
 
 		/**

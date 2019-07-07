@@ -9,6 +9,8 @@ import com.deepnoodle.openeditors.models.EditorModel;
 public interface IEditorTableView {
 	void setInput(List<EditorModel> editors);
 
+	void setActiveEditor(EditorModel editor);
+
 	IViewSite getViewSite();
 
 	List<EditorModel> getSelectedEditors();

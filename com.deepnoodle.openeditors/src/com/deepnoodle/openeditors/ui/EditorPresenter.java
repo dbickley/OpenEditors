@@ -9,6 +9,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
@@ -35,11 +36,19 @@ public class EditorPresenter
 	private EditorComparator editorComparator;
 
 	private EditorModel activeEditor;
-	private EditorPart editorPartOfActiveEditor;
+	private IEditorPart editorPartOfActiveEditor;
 
 	public EditorPresenter(EclipseEditorService editorService, SettingsService settingsService) {
 		this.editorService = editorService;
 		this.settingsService = settingsService;
+
+		try {
+			var activeEditorPart =
+			    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+			setActivePart( activeEditorPart );
+		} catch( Exception e ) {
+			log.error( e );
+		}
 	}
 
 	@Override
@@ -169,7 +178,7 @@ public class EditorPresenter
 		refresh();
 	}
 
-	private void setActivePart(EditorPart part) {
+	private void setActivePart(IEditorPart part) {
 		if( part == null ) {
 			setActiveEditor( null );
 			return;
@@ -192,6 +201,7 @@ public class EditorPresenter
 		if( activeEditor != null ) {
 			activeEditor.getReference().addPropertyListener( this );
 			activeEditor.setLastAccessTime( new Date() );
+			view.setActiveEditor( editor );
 		}
 	}
 

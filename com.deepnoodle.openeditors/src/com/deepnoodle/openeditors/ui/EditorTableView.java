@@ -3,6 +3,7 @@ package com.deepnoodle.openeditors.ui;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -11,7 +12,6 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -59,7 +59,8 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		this.viewSite = viewSite;
 		this.presenter = presenter;
 		presenter.setView( this );
-		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
+		tableViewer = new TableViewer( parent,
+		    SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION );
 
 		editorLabelProvider = new EditorViewLabelProvider( presenter );
 		tableViewer.setLabelProvider( editorLabelProvider );
@@ -74,8 +75,10 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		// Enable tool tips
 		ColumnViewerToolTipSupport.enableFor( tableViewer );
 
+		// Add click listener
 		tableViewer.getControl().addMouseListener( this );
 
+		// Create the menu
 		menuManager = new EditorItemMenuManager( presenter, viewSite, parent );
 		tableViewer.getTable().setMenu( menuManager.createContextMenu( parent ) );
 	}
@@ -89,28 +92,9 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		tableViewer.refresh();
 	}
 
-	private void formatRows(TableItem[] items, EditorModel activeEditor) {
-		//						for( TableItem item : items ) {
-		//							try {
-		//								EditorModel editor = ( (EditorModel) item.getData() );
-		//								if( editor.isPinned() ) {
-		//									item.setForeground( pinnedColor );
-		//								} else if( editor.isDirty() ) {
-		//									item.setForeground( dirtyColor );
-		//								} else {
-		//									item.setForeground( forgroundColor );
-		//								}
-		//				
-		//								if( activeEditor != null && editor.getFilePath().equals( activeEditor.getFilePath() ) ) {
-		//									item.setBackground( highlightColor );
-		//								} else {
-		//									item.setBackground( backgroundColor );
-		//								}
-		//								item.setChecked( false );
-		//							} catch( Exception e ) {
-		//								log.warn( e );
-		//							}
-		//						}
+	@Override
+	public void setActiveEditor(EditorModel editor) {
+		tableViewer.setSelection( new StructuredSelection( editor ) );
 	}
 
 	@Override
