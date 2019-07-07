@@ -21,6 +21,7 @@ import com.deepnoodle.openeditors.ui.EditorItemMenuManager.IEditorItemMenuManage
 
 public class EditorTableView implements MouseListener, IEditorTableView {
 
+	@SuppressWarnings("unused")
 	private static LogWrapper log = new LogWrapper( EditorTableView.class );
 
 	public interface IEditorTableViewPresenter extends IEditorItemMenuManagerCallback {

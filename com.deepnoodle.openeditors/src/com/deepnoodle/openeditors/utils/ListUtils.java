@@ -3,6 +3,7 @@ package com.deepnoodle.openeditors.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,30 @@ public final class ListUtils {
 			result.add( element );
 		}
 		return result;
+	}
+
+	/**
+	 * Moves an element in a list to another position.
+	 * The other elements are moved accordingly to make space and fill the gap.
+	 */
+	public static void moveTo(List<?> list, int fromIndex, int toIndex) {
+		if( fromIndex < 0 || fromIndex >= list.size() ) {
+			throw new IllegalArgumentException( "fromIndex out of range" );
+		}
+		if( toIndex < 0 || toIndex >= list.size() ) {
+			throw new IllegalArgumentException( "toIndex out of range" );
+		}
+
+		if( fromIndex < toIndex ) {
+			Collections.rotate( list.subList( fromIndex, toIndex + 1 ), -1 );
+		} else if( fromIndex > toIndex ) {
+			Collections.rotate( list.subList( toIndex, fromIndex + 1 ), 1 );
+		}
+	}
+
+	@SafeVarargs
+	public static <T> List<T> asList(T... xs) {
+		return Arrays.asList( xs );
 	}
 
 	/**

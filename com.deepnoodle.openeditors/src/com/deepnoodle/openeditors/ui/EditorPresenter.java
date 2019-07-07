@@ -14,6 +14,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.EditorComparator;
+import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
@@ -25,6 +26,7 @@ public class EditorPresenter
     implements IEditorTableViewPresenter, IEditorItemMenuManagerCallback, IPartListener,
     IPropertyListener {
 
+	@SuppressWarnings("unused")
 	private static LogWrapper log = new LogWrapper( EditorPresenter.class );
 
 	private static List<IOpenEditorsChangedListener> openEditorsChangedListeners = new ArrayList<>();
@@ -150,12 +152,6 @@ public class EditorPresenter
 		}
 	}
 
-	public void setSortBy(EditorComparator.SortType sortBy) {
-		settingsService.editAndSave( (settings) -> settings.setSortBy( sortBy ) );
-		getOrCreateEditorComparator().setSortBy( sortBy );
-		refresh();
-	}
-
 	public void dispose() {
 		// Remove listener on active editor
 		setActiveEditor( null );
@@ -167,7 +163,7 @@ public class EditorPresenter
 
 	private EditorComparator getOrCreateEditorComparator() {
 		if( editorComparator == null ) {
-			editorComparator = new EditorComparator( settingsService.getSettings().getSortBy() );
+			editorComparator = new EditorComparator( settingsService.getSettings().getSortSequence() );
 		}
 		return editorComparator;
 	}
@@ -231,5 +227,11 @@ public class EditorPresenter
 		List<EditorModel> editors = editorService.getOpenEditors();
 		// TODO: Update their data based on stored settings (e.g. pinned state, lastAccessTime)
 		return editors;
+	}
+
+	public void setSortSequence(List<SortType> newSortSequence) {
+		settingsService.editAndSave( (settings) -> settings.setSortSequence( newSortSequence ) );
+		getOrCreateEditorComparator().setSortSequence( newSortSequence );
+		refresh();
 	}
 }

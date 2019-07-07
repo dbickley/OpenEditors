@@ -1,5 +1,9 @@
 package com.deepnoodle.openeditors.models;
 
+import static com.deepnoodle.openeditors.utils.ListUtils.asList;
+
+import java.util.List;
+
 import org.eclipse.swt.graphics.RGB;
 
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
@@ -11,7 +15,8 @@ public class SettingsModel {
 	private RGB pinnedColor = new RGB( 60, 15, 175 );
 	private RGB dirtyColor = new RGB( 204, 0, 0 );
 
-	private SortType sortBy = SortType.ACCESS;
+	private List<SortType> sortSequence =
+	    asList( SortType.PATH, SortType.NAME, SortType.EXTENSION, SortType.NATURAL, SortType.ACCESS );
 
 	public SettingsModel() {
 	}
@@ -48,11 +53,11 @@ public class SettingsModel {
 		this.dirtyColor = dirtyColor;
 	}
 
-	public SortType getSortBy() {
-		return sortBy;
+	public List<SortType> getSortSequence() {
+		return sortSequence;
 	}
 
-	public void setSortBy(SortType sortBy) {
-		this.sortBy = sortBy;
+	public void setSortSequence(List<SortType> sortSequence) {
+		this.sortSequence = sortSequence;
 	}
 }

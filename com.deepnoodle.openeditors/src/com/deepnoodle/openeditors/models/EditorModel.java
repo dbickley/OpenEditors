@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.eclipse.ui.IEditorReference;
 
+import com.deepnoodle.openeditors.utils.FileUtils;
+import com.deepnoodle.openeditors.utils.StringUtils;
+
 public class EditorModel {
 	private IEditorReference reference;
 	private String name;
@@ -82,5 +85,13 @@ public class EditorModel {
 
 	public void setLastAccessTime(Date lastAccessTime) {
 		this.lastAccessTime = lastAccessTime;
+	}
+
+	public String getFileExtension() {
+		if( !StringUtils.isNullOrEmpty( name ) ) {
+			return FileUtils.getFileExtension( name );
+		} else {
+			return "";
+		}
 	}
 }

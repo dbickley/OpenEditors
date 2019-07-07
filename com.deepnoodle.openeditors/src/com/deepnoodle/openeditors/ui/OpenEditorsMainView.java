@@ -1,14 +1,18 @@
 package com.deepnoodle.openeditors.ui;
 
+import static com.deepnoodle.openeditors.utils.ListUtils.copy;
+
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
-import com.deepnoodle.openeditors.models.EditorComparator;
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
@@ -16,33 +20,22 @@ import com.deepnoodle.openeditors.services.SettingsService;
 public class OpenEditorsMainView extends ViewPart {
 
 	private EditorPresenter editorPresenter;
+	private EclipseEditorService editorService;
+	private SettingsService settingsService;
+	private EditorTableView editorTableView;
 
 	@Override
 	@PostConstruct
 	public void createPartControl(Composite parent) {
-		EclipseEditorService editorService = new EclipseEditorService();
-		SettingsService settingsService = new SettingsService();
+		editorService = new EclipseEditorService();
+		settingsService = new SettingsService();
 		editorPresenter = new EditorPresenter( editorService, settingsService );
-		EditorTableView editorTableView = new EditorTableView( parent, getViewSite(), editorPresenter );
+		editorTableView = new EditorTableView( parent, getViewSite(), editorPresenter );
 
 		// Listen to opened and closed editors
 		getSite().getWorkbenchWindow().getPartService().addPartListener( editorPresenter );
 
-		Action sortByNameAction =
-		    createSortAction( EditorComparator.SortType.NAME, "Sort by Name", "Sorts the editors by name" );
-		Action sortByPathAction =
-		    createSortAction( EditorComparator.SortType.PATH, "Sort by Path", "Sorts the editors by full path" );
-		Action sortByAccessAction = createSortAction( EditorComparator.SortType.ACCESS, "Sort by Access",
-		    "Sorts the editors by the last access time" );
-		Action sortByNaturalAction = createSortAction( EditorComparator.SortType.NATURAL, "Sort by Tab Order",
-		    "Sorts the editors in the order of the corresponding tabs" );
-
-		IActionBars bars = getViewSite().getActionBars();
-		IMenuManager menuManager = bars.getMenuManager();
-		menuManager.add( sortByNameAction );
-		menuManager.add( sortByPathAction );
-		menuManager.add( sortByAccessAction );
-		menuManager.add( sortByNaturalAction );
+		createMenu();
 	}
 
 	@Override
@@ -57,19 +50,26 @@ public class OpenEditorsMainView extends ViewPart {
 		editorPresenter.dispose();
 	}
 
-	public interface ISortActionCallback {
-		void setSortBy(SortType sortType);
-	}
-
-	private Action createSortAction(SortType sortType, String title, String tooltip) {
-		Action sortAction = new Action() {
+	private void createMenu() {
+		Action openEditSortSequenceDialog = new Action() {
 			@Override
 			public void run() {
-				editorPresenter.setSortBy( sortType );
+				var shell = getSite().getWorkbenchWindow().getShell();
+				List<SortType> sortTypes = settingsService.getSettings().getSortSequence();
+				var dialog = new EditSortSequenceDialog( shell, copy( sortTypes ) );
+				var clickedButton = dialog.open();
+				if( clickedButton == Window.OK ) {
+					System.out.println( "ok clicked" );
+					var newSortSequence = dialog.getSortSequence();
+					editorPresenter.setSortSequence( newSortSequence );
+				}
 			}
 		};
-		sortAction.setText( title );
-		sortAction.setToolTipText( tooltip );
-		return sortAction;
+		openEditSortSequenceDialog.setText( "Edit Sort Sequence..." );
+
+		// Add the actions to the menu manager.
+		IActionBars bars = getViewSite().getActionBars();
+		IMenuManager menuManager = bars.getMenuManager();
+		menuManager.add( openEditSortSequenceDialog );
 	}
 }
