@@ -1,37 +1,28 @@
 package com.deepnoodle.openeditors.models;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class EditorComparator implements Comparator<EditorModel> {
 	public enum SortType {
-		ACCESS, NATURAL, NAME, PATH
+		ACCESS, NATURAL, NAME, PATH, EXTENSION
 	}
 
-	private SortType sortBy;
+	private List<SortType> sortSequence;
 
-	public EditorComparator(SortType sortBy) {
-		this.sortBy = sortBy;
+	public EditorComparator(List<SortType> sortSequence) {
+		this.setSortSequence( sortSequence );
 	}
 
 	@Override
 	public int compare(EditorModel editor1, EditorModel editor2) {
 		int compare = Boolean.compare( editor2.isPinned(), editor1.isPinned() );
 		if( compare == 0 ) {
-			switch( sortBy ) {
-			case ACCESS :
-				compare = compare( editor2.getLastAccessTime(), editor1.getLastAccessTime() );
-				break;
-			case NATURAL :
-				compare = compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );
-				break;
-			case NAME :
-				compare = compare( editor1.getName().toLowerCase(), editor2.getName().toLowerCase() );
-				break;
-			case PATH :
-				compare = compare( editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase() );
-				break;
-			default :
-				break;
+			for( var sortType : sortSequence ) {
+				compare = compare( editor1, editor2, sortType );
+				if( compare != 0 ) {
+					return compare;
+				}
 			}
 		}
 		return compare;
@@ -50,11 +41,28 @@ public class EditorComparator implements Comparator<EditorModel> {
 		return one.compareTo( two );
 	}
 
-	public SortType getSortBy() {
-		return sortBy;
+	public List<SortType> getSortSequence() {
+		return sortSequence;
 	}
 
-	public void setSortBy(SortType sortBy) {
-		this.sortBy = sortBy;
+	public void setSortSequence(List<SortType> sortSequence) {
+		this.sortSequence = sortSequence;
+	}
+
+	private int compare(EditorModel editor1, EditorModel editor2, SortType sortType) {
+		switch( sortType ) {
+		case ACCESS :
+			return compare( editor2.getLastAccessTime(), editor1.getLastAccessTime() );
+		case NATURAL :
+			return compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );
+		case NAME :
+			return compare( editor1.getName().toLowerCase(), editor2.getName().toLowerCase() );
+		case PATH :
+			return compare( editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase() );
+		case EXTENSION :
+			return compare( editor1.getFileExtension().toLowerCase(), editor2.getFileExtension().toLowerCase() );
+		default :
+			return 0;
+		}
 	}
 }
