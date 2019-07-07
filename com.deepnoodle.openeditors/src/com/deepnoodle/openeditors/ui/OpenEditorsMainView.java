@@ -8,16 +8,21 @@ import javax.annotation.PostConstruct;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 
+import com.deepnoodle.openeditors.logging.LogWrapper;
 import com.deepnoodle.openeditors.models.EditorComparator.SortType;
 import com.deepnoodle.openeditors.services.EclipseEditorService;
 import com.deepnoodle.openeditors.services.SettingsService;
 
 public class OpenEditorsMainView extends ViewPart {
+
+	private static LogWrapper log = new LogWrapper( OpenEditorsMainView.class );
 
 	private EditorPresenter editorPresenter;
 	private EclipseEditorService editorService;
@@ -36,6 +41,7 @@ public class OpenEditorsMainView extends ViewPart {
 		getSite().getWorkbenchWindow().getPartService().addPartListener( editorPresenter );
 
 		createMenu();
+		createToolbar();
 	}
 
 	@Override
@@ -48,6 +54,27 @@ public class OpenEditorsMainView extends ViewPart {
 		// Remove all listeners
 		getSite().getWorkbenchWindow().getPartService().removePartListener( editorPresenter );
 		editorPresenter.dispose();
+	}
+
+	private void createToolbar() {
+
+		Action openSwitchToEditorDialog = new Action() {
+			@Override
+			public void run() {
+				IHandlerService handlerService = (IHandlerService) getSite().getService( IHandlerService.class );
+				try {
+					handlerService.executeCommand( "org.eclipse.ui.window.switchToEditor", null );
+				} catch( Exception e ) {
+					log.error( e );
+				}
+			}
+		};
+		openSwitchToEditorDialog.setText( "Switch to Editor..." );
+
+		// Add the actions to the menu manager.
+		IActionBars actionBars = getViewSite().getActionBars();
+		IToolBarManager toolBar = actionBars.getToolBarManager();
+		toolBar.add( openSwitchToEditorDialog );
 	}
 
 	private void createMenu() {
@@ -68,8 +95,8 @@ public class OpenEditorsMainView extends ViewPart {
 		openEditSortSequenceDialog.setText( "Edit Sort Sequence..." );
 
 		// Add the actions to the menu manager.
-		IActionBars bars = getViewSite().getActionBars();
-		IMenuManager menuManager = bars.getMenuManager();
+		IActionBars actionBars = getViewSite().getActionBars();
+		IMenuManager menuManager = actionBars.getMenuManager();
 		menuManager.add( openEditSortSequenceDialog );
 	}
 }
