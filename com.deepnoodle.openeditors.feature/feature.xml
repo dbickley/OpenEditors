@@ -219,10 +219,6 @@ Furthermore, editors with the same name can be shown with parts of their paths t
 limitations under the License.
    </license>
 
-   <url>
-      <discovery label="Open Editors on GitHub" url="https://github.com/dbickley/OpenEditors"/>
-   </url>
-
    <plugin
          id="com.deepnoodle.openeditors"
          download-size="0"
