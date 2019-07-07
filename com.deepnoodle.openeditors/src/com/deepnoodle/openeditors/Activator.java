@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "deepnoodle.openeditors";
+	public static final String PLUGIN_ID = "com.deepnoodle.openeditors";
 
 	private static Activator plugin;
 

@@ -24,5 +24,6 @@ Export-Package: com.deepnoodle.openeditors,
  com.deepnoodle.openeditors.persistence,
  com.deepnoodle.openeditors.services,
  com.deepnoodle.openeditors.ui,
+ com.deepnoodle.openeditors.ui.dnd,
  com.deepnoodle.openeditors.utils
 
