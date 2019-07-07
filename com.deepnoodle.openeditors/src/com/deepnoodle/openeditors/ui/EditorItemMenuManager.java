@@ -75,6 +75,7 @@ public class EditorItemMenuManager implements IMenuListener {
 		Runnable runnable;
 
 		EditorItemMenuAction(String title, Runnable runnable) {
+			this.runnable = runnable;
 			setText( title );
 		}
 

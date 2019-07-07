@@ -23,7 +23,7 @@ import com.deepnoodle.openeditors.ui.EditorTableView.IEditorTableViewPresenter;
 import com.deepnoodle.openeditors.utils.MapUtils;
 import com.deepnoodle.openeditors.utils.PathUtils;
 
-class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider implements IOpenEditorsChangedListener {
+class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
 	private static LogWrapper log = new LogWrapper( EditorViewLabelProvider.class );
 
@@ -45,11 +45,6 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider implemen
 	@Override
 	public EditorStyledLabelProvider getStyledStringProvider() {
 		return (EditorStyledLabelProvider) super.getStyledStringProvider();
-	}
-
-	@Override
-	public void onOpenEditorsChanged(List<EditorModel> newOpenEditors) {
-		updateLabels( newOpenEditors );
 	}
 
 	public void updateLabels(List<EditorModel> editors) {

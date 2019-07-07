@@ -34,12 +34,6 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		void setView(IEditorTableView view);
 
 		List<EditorModel> getSortedEditors();
-
-		void onEditorContentProviderGetElementsCalled(List<EditorModel> editors);
-
-		void addOpenEditorsChangedListener(IOpenEditorsChangedListener listener);
-
-		void removeOpenEditorsChangedListener(IOpenEditorsChangedListener listener);
 	}
 
 	/**
@@ -59,6 +53,7 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 	private TableViewer tableViewer;
 
 	private EditorItemMenuManager menuManager;
+	private EditorViewLabelProvider editorLabelProvider;
 
 	public EditorTableView(Composite parent, IViewSite viewSite, IEditorTableViewPresenter presenter) {
 		this.viewSite = viewSite;
@@ -66,13 +61,15 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		presenter.setView( this );
 		tableViewer = new TableViewer( parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL );
 
-		var editorLabelProvider = new EditorViewLabelProvider( presenter );
-		var editorContentProvider = new EditorContentProvider( presenter );
-		presenter.addOpenEditorsChangedListener( editorLabelProvider );
+		editorLabelProvider = new EditorViewLabelProvider( presenter );
 		tableViewer.setLabelProvider( editorLabelProvider );
+
+		// There is a visual glitch when using an ArrayContentProvider and tableViewer.setInput with a list of new editors.
+		// Current workaround: set a dummy object as input, and refresh the viewer to set input.
+		// The EditorContentProvider will then fetch new contents from the presenter.
+		var editorContentProvider = new EditorContentProvider( presenter );
 		tableViewer.setContentProvider( editorContentProvider );
-		// TODO: can I set null as input?
-		tableViewer.setInput( viewSite );
+		tableViewer.setInput( new Object() );
 
 		// Enable tool tips
 		ColumnViewerToolTipSupport.enableFor( tableViewer );
@@ -84,32 +81,36 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 	}
 
 	@Override
-	public void refresh() {
+	public void setInput(List<EditorModel> editors) {
+		editorLabelProvider.updateLabels( editors );
+
+		// There is a visual glitch when using an ArrayContentProvider and tableViewer.setInput with a list of new editors.
+		// Workaround: Refresh, so the content provider will fetch new editors from the presenter.
 		tableViewer.refresh();
 	}
 
 	private void formatRows(TableItem[] items, EditorModel activeEditor) {
-		//				for( TableItem item : items ) {
-		//					try {
-		//						EditorModel editor = ( (EditorModel) item.getData() );
-		//						if( editor.isPinned() ) {
-		//							item.setForeground( pinnedColor );
-		//						} else if( editor.isDirty() ) {
-		//							item.setForeground( dirtyColor );
-		//						} else {
-		//							item.setForeground( forgroundColor );
+		//						for( TableItem item : items ) {
+		//							try {
+		//								EditorModel editor = ( (EditorModel) item.getData() );
+		//								if( editor.isPinned() ) {
+		//									item.setForeground( pinnedColor );
+		//								} else if( editor.isDirty() ) {
+		//									item.setForeground( dirtyColor );
+		//								} else {
+		//									item.setForeground( forgroundColor );
+		//								}
+		//				
+		//								if( activeEditor != null && editor.getFilePath().equals( activeEditor.getFilePath() ) ) {
+		//									item.setBackground( highlightColor );
+		//								} else {
+		//									item.setBackground( backgroundColor );
+		//								}
+		//								item.setChecked( false );
+		//							} catch( Exception e ) {
+		//								log.warn( e );
+		//							}
 		//						}
-		//		
-		//						if( activeEditor != null && editor.getFilePath().equals( activeEditor.getFilePath() ) ) {
-		//							item.setBackground( highlightColor );
-		//						} else {
-		//							item.setBackground( backgroundColor );
-		//						}
-		//						item.setChecked( false );
-		//					} catch( Exception e ) {
-		//						log.warn( e );
-		//					}
-		//				}
 	}
 
 	@Override

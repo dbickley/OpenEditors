@@ -2,7 +2,6 @@ package com.deepnoodle.openeditors.ui;
 
 import static com.deepnoodle.openeditors.utils.ListUtils.copy;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class EditorPresenter
 
 	@SuppressWarnings("unused")
 	private static LogWrapper log = new LogWrapper( EditorPresenter.class );
-
-	private static List<IOpenEditorsChangedListener> openEditorsChangedListeners = new ArrayList<>();
 
 	private SettingsService settingsService;
 	private EclipseEditorService editorService;
@@ -68,7 +65,7 @@ public class EditorPresenter
 		for( var editor : editors ) {
 			editorService.closeEditor( editor, view.getViewSite() );
 		}
-		refresh();
+		// No refresh needed here because closeEditor will be called as from the IPartListener
 	}
 
 	@Override
@@ -158,7 +155,7 @@ public class EditorPresenter
 	}
 
 	public void refresh() {
-		view.refresh();
+		view.setInput( getSortedEditors() );
 	}
 
 	private EditorComparator getOrCreateEditorComparator() {
@@ -205,21 +202,6 @@ public class EditorPresenter
 		List<EditorModel> sortedEditors = copy( editors );
 		sortedEditors.sort( editorComparator );
 		return sortedEditors;
-	}
-
-	@Override
-	public void onEditorContentProviderGetElementsCalled(List<EditorModel> editors) {
-		openEditorsChangedListeners.forEach( (it) -> it.onOpenEditorsChanged( editors ) );
-	}
-
-	@Override
-	public void addOpenEditorsChangedListener(IOpenEditorsChangedListener listener) {
-		openEditorsChangedListeners.add( listener );
-	}
-
-	@Override
-	public void removeOpenEditorsChangedListener(IOpenEditorsChangedListener listener) {
-		openEditorsChangedListeners.remove( listener );
 	}
 
 	private List<EditorModel> queryOpenEditors() {

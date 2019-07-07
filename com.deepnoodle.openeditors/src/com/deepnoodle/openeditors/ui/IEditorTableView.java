@@ -7,9 +7,9 @@ import org.eclipse.ui.IViewSite;
 import com.deepnoodle.openeditors.models.EditorModel;
 
 public interface IEditorTableView {
-	public void refresh();
+	void setInput(List<EditorModel> editors);
 
-	public IViewSite getViewSite();
+	IViewSite getViewSite();
 
-	public List<EditorModel> getSelectedEditors();
+	List<EditorModel> getSelectedEditors();
 }
