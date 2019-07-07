@@ -4,6 +4,7 @@ Open Editors is an Eclipse plugin. It adds a view that shows all open editors in
 You can find more information on the [GitHub Pages Site](https://dbickley.github.io/OpenEditors/).
 
 Published on the [Eclipse Marketplace](https://marketplace.eclipse.org/content/open-editors)
+<br />Update Site: https://raw.githubusercontent.com/dbickley/OpenEditors/release/updatesite
 
 [![Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client](https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=4046826 "Drag to your running Eclipse workspace. (Requires Eclipse Marketplace Client)")
 
