@@ -78,15 +78,15 @@ public class EditSortSequenceDialog extends Dialog {
 			SortType sortType = (SortType) element;
 			switch( sortType ) {
 			case NAME :
-				return "File name";
+				return "File Name";
 			case PATH :
-				return "File path";
+				return "File Path";
 			case EXTENSION :
 				return "File Extension";
 			case NATURAL :
 				return "Tab Order in Eclipse";
 			case ACCESS :
-				return "Last access time";
+				return "Last Access Time";
 			default :
 				return sortType.toString();
 			}

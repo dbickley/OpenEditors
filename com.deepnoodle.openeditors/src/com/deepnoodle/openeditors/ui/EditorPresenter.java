@@ -201,7 +201,9 @@ public class EditorPresenter
 		if( activeEditor != null ) {
 			activeEditor.getReference().addPropertyListener( this );
 			activeEditor.setLastAccessTime( new Date() );
-			view.setActiveEditor( editor );
+			if( view != null ) {
+				view.setActiveEditor( editor );
+			}
 		}
 	}
 
