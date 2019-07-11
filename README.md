@@ -8,6 +8,7 @@ Published on the [Eclipse Marketplace](https://marketplace.eclipse.org/content/o
 
 [![Drag to your running Eclipse* workspace. *Requires Eclipse Marketplace Client](https://marketplace.eclipse.org/sites/all/themes/solstice/public/images/marketplace/btn-install.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=4046826 "Drag to your running Eclipse workspace. (Requires Eclipse Marketplace Client)")
 
+See also the [Recent Editors](https://github.com/achimmihca/RecentEditors) plugin to quickly re-open closed files.
 
 # Development Environment Setup
 
