@@ -9,4 +9,8 @@ public final class StringUtils {
 		return ( s == null || s.length() == 0 );
 	}
 
+	public static String nullToEmpty(String filePath) {
+		return ( filePath == null ) ? "" : filePath;
+	}
+
 }

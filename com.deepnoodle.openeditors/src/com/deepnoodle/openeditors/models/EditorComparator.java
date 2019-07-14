@@ -3,6 +3,8 @@ package com.deepnoodle.openeditors.models;
 import java.util.Comparator;
 import java.util.List;
 
+import com.deepnoodle.openeditors.utils.StringUtils;
+
 public class EditorComparator implements Comparator<EditorModel> {
 	public enum SortType {
 		ACCESS, NATURAL, NAME, PATH, EXTENSION
@@ -56,11 +58,17 @@ public class EditorComparator implements Comparator<EditorModel> {
 		case NATURAL :
 			return compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );
 		case NAME :
-			return compare( editor1.getName().toLowerCase(), editor2.getName().toLowerCase() );
+			var name1 = StringUtils.nullToEmpty( editor1.getName() ).toLowerCase();
+			var name2 = StringUtils.nullToEmpty( editor2.getName() ).toLowerCase();
+			return compare( name1, name2 );
 		case PATH :
-			return compare( editor1.getFilePath().toLowerCase(), editor2.getFilePath().toLowerCase() );
+			var filePath1 = StringUtils.nullToEmpty( editor1.getFilePath() ).toLowerCase();
+			var filePath2 = StringUtils.nullToEmpty( editor2.getFilePath() ).toLowerCase();
+			return compare( filePath1, filePath2 );
 		case EXTENSION :
-			return compare( editor1.getFileExtension().toLowerCase(), editor2.getFileExtension().toLowerCase() );
+			var fileExtension1 = StringUtils.nullToEmpty( editor1.getFileExtension() ).toLowerCase();
+			var fileExtension2 = StringUtils.nullToEmpty( editor2.getFileExtension() ).toLowerCase();
+			return compare( fileExtension1, fileExtension2 );
 		default :
 			return 0;
 		}
