@@ -66,7 +66,6 @@ public class OpenEditorsMainView extends ViewPart {
 				var dialog = new EditSortSequenceDialog( shell, copy( sortTypes ) );
 				var clickedButton = dialog.open();
 				if( clickedButton == Window.OK ) {
-					System.out.println( "ok clicked" );
 					var newSortSequence = dialog.getSortSequence();
 					editorPresenter.setSortSequence( newSortSequence );
 				}

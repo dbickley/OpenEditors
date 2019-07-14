@@ -31,7 +31,7 @@ public class FilePersistenceService implements IPersistenceService {
 	public <T> Optional<T> load(String fileName, Class<T> clazz) {
 		Path filePath = getPersistentFilePath( fileName );
 		try {
-			log.info( "Reading file '" + filePath + "'" );
+			//			log.info( "Reading file '" + filePath + "'" );
 			String json = Files.readString( filePath, StandardCharsets.UTF_8 );
 			T loadedInstance = JsonUtils.fromJson( json, clazz );
 			return Optional.of( loadedInstance );
@@ -48,7 +48,7 @@ public class FilePersistenceService implements IPersistenceService {
 	public <T> void save(String fileName, T object) {
 		Path filePath = getPersistentFilePath( fileName );
 		try {
-			log.info( "Writing file '" + filePath + "'" );
+			//			log.info( "Writing file '" + filePath + "'" );
 			String json = JsonUtils.toJsonPrettyPrint( object );
 			Files.writeString( filePath, json, StandardCharsets.UTF_8 );
 		} catch( Exception e ) {
