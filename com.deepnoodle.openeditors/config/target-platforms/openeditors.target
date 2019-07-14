@@ -27,5 +27,9 @@
             <unit id="org.junit.platform.suite.api" version="1.4.0.v20190212-2109"/>
             <unit id="org.junit.platform.suite.api.source" version="1.4.0.v20190212-2109"/>
         </location>
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+            <repository location="http://download.eclipse.org/releases/2019-06"/>
+            <unit id="org.eclipse.jdt.feature.group" version="3.18.0.v20190605-1800"/>
+        </location>
     </locations>
 </target>
