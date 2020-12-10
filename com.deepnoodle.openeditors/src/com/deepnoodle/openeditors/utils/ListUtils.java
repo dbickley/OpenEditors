@@ -64,8 +64,7 @@ public final class ListUtils {
 	 * Creates a shallow copy of the given collection.
 	 */
 	public static <T> List<T> copy(Collection<T> collection) {
-		var copy = new ArrayList<>( collection );
-		return copy;
+		return new ArrayList<>( collection );
 	}
 
 	public static <T, R> List<R> map(T[] collection, Function<T, R> mapper) {
@@ -92,10 +91,10 @@ public final class ListUtils {
 	 * the current item and the corresponding index.
 	 */
 	public static <T> Iterable<IndexedEntry<T>> indexed(T[] array) {
-		Iterable<IndexedEntry<T>> iterableWithIndex = new Iterable<>() {
+		Iterable<IndexedEntry<T>> iterableWithIndex = new Iterable<IndexedEntry<T>>() {
 			@Override
 			public Iterator<IndexedEntry<T>> iterator() {
-				Iterator<IndexedEntry<T>> iteratorWithIndex = new Iterator<>() {
+				Iterator<IndexedEntry<T>> iteratorWithIndex = new Iterator<IndexedEntry<T>> () {
 					Integer currentIndex = 0;
 
 					@Override
@@ -127,10 +126,10 @@ public final class ListUtils {
 	public static <T> Iterable<IndexedEntry<T>> indexed(Iterable<T> iterable) {
 		Iterator<T> iterator = iterable.iterator();
 
-		Iterable<IndexedEntry<T>> iterableWithIndex = new Iterable<>() {
+		Iterable<IndexedEntry<T>> iterableWithIndex = new Iterable<IndexedEntry<T>>() {
 			@Override
 			public Iterator<IndexedEntry<T>> iterator() {
-				Iterator<IndexedEntry<T>> iteratorWithIndex = new Iterator<>() {
+				Iterator<IndexedEntry<T>> iteratorWithIndex = new Iterator<IndexedEntry<T>>() {
 					Integer currentIndex = 0;
 
 					@Override

@@ -36,14 +36,14 @@ public class ReorderViewerDropTarget extends ViewerDropAdapter {
 	@Override
 	public boolean performDrop(Object data) {
 		// The data must contain the source position as a String.
-		var sourceIndex = Integer.valueOf( data.toString() );
+		Integer sourceIndex = Integer.valueOf( data.toString() );
 
 		// Get the target position.
-		var target = getCurrentTarget();
+		Object target = getCurrentTarget();
 		if( target == null ) {
 			return false;
 		}
-		var list = ( (List<?>) getViewer().getInput() );
+		List<?> list = ( (List<?>) getViewer().getInput() );
 		double targetIndex = list.indexOf( target );
 		if( targetIndex < 0 ) {
 			log.warn( "Drop target not found in list (target:" + target + ", list: " + list + ")" );
@@ -56,7 +56,7 @@ public class ReorderViewerDropTarget extends ViewerDropAdapter {
 		}
 
 		// Only allow dropping items after or before other items but not on other items.
-		var dropLocation = getCurrentLocation();
+		int dropLocation = getCurrentLocation();
 		if( dropLocation == ViewerDropAdapter.LOCATION_BEFORE ) {
 			targetIndex -= 0.5;
 			targetIndex = Math.max( targetIndex, 0 );

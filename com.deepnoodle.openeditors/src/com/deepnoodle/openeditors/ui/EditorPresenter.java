@@ -43,7 +43,7 @@ public class EditorPresenter
 		this.settingsService = settingsService;
 
 		try {
-			var activeEditorPart =
+			IEditorPart activeEditorPart =
 			    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 			setActivePart( activeEditorPart );
 		} catch( Exception e ) {
@@ -71,7 +71,7 @@ public class EditorPresenter
 	@Override
 	public void onCloseSelectedEditors() {
 		List<EditorModel> editors = view.getSelectedEditors();
-		for( var editor : editors ) {
+		for( EditorModel editor : editors ) {
 			editorService.closeEditor( editor, view.getViewSite() );
 		}
 		// No refresh needed here because closeEditor will be called as from the IPartListener
@@ -93,13 +93,13 @@ public class EditorPresenter
 
 	@Override
 	public boolean canPinSelectedEditors() {
-		var editors = view.getSelectedEditors();
+		List<EditorModel> editors = view.getSelectedEditors();
 		return ListUtils.findFirst( editors, (editor) -> !editor.isPinned() ).isPresent();
 	}
 
 	@Override
 	public boolean canUnPinSelectedEditors() {
-		var editors = view.getSelectedEditors();
+	    List<EditorModel> editors = view.getSelectedEditors();
 		return ListUtils.findFirst( editors, (editor) -> editor.isPinned() ).isPresent();
 	}
 
@@ -185,7 +185,7 @@ public class EditorPresenter
 		}
 
 		List<EditorModel> editors = editorService.getOpenEditors();
-		for( var editor : editors ) {
+		for( EditorModel editor : editors ) {
 			if( editor.getReference() != null && editor.getReference().getPart( false ) == part ) {
 				setActiveEditor( editor );
 				editorPartOfActiveEditor = part;

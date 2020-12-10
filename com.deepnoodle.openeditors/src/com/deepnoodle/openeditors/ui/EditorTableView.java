@@ -68,7 +68,7 @@ public class EditorTableView implements MouseListener, IEditorTableView {
 		// There is a visual glitch when using an ArrayContentProvider and tableViewer.setInput with a list of new editors.
 		// Current workaround: set a dummy object as input, and refresh the viewer to set input.
 		// The EditorContentProvider will then fetch new contents from the presenter.
-		var editorContentProvider = new EditorContentProvider( presenter );
+		EditorContentProvider editorContentProvider = new EditorContentProvider( presenter );
 		tableViewer.setContentProvider( editorContentProvider );
 		tableViewer.setInput( new Object() );
 

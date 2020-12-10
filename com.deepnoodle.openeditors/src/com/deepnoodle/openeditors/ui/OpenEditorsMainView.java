@@ -10,6 +10,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
@@ -61,12 +62,12 @@ public class OpenEditorsMainView extends ViewPart {
 		Action openEditSortSequenceDialog = new Action() {
 			@Override
 			public void run() {
-				var shell = getSite().getWorkbenchWindow().getShell();
+				Shell shell = getSite().getWorkbenchWindow().getShell();
 				List<SortType> sortTypes = settingsService.getSettings().getSortSequence();
-				var dialog = new EditSortSequenceDialog( shell, copy( sortTypes ) );
-				var clickedButton = dialog.open();
+				EditSortSequenceDialog dialog = new EditSortSequenceDialog( shell, copy( sortTypes ) );
+				int clickedButton = dialog.open();
 				if( clickedButton == Window.OK ) {
-					var newSortSequence = dialog.getSortSequence();
+					List<SortType> newSortSequence = dialog.getSortSequence();
 					editorPresenter.setSortSequence( newSortSequence );
 				}
 			}

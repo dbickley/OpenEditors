@@ -32,7 +32,11 @@ public class FilePersistenceService implements IPersistenceService {
 		Path filePath = getPersistentFilePath( fileName );
 		try {
 			//			log.info( "Reading file '" + filePath + "'" );
-			String json = Files.readString( filePath, StandardCharsets.UTF_8 );
+		    //Java 1.8
+		    byte[] fileContents = Files.readAllBytes(filePath);
+		    String json = new String(fileContents, StandardCharsets.UTF_8);
+		    //Java 11
+			//String json = Files.readString( filePath, StandardCharsets.UTF_8 );
 			T loadedInstance = JsonUtils.fromJson( json, clazz );
 			return Optional.of( loadedInstance );
 		} catch( NoSuchFileException | FileNotFoundException noFileException ) {
@@ -50,7 +54,11 @@ public class FilePersistenceService implements IPersistenceService {
 		try {
 			//			log.info( "Writing file '" + filePath + "'" );
 			String json = JsonUtils.toJsonPrettyPrint( object );
-			Files.writeString( filePath, json, StandardCharsets.UTF_8 );
+			//Java 1.8
+			Files.write(filePath, json.getBytes(StandardCharsets.UTF_8));
+
+			//Java 11+
+			//Files.writeString( filePath, json, StandardCharsets.UTF_8 );
 		} catch( Exception e ) {
 			log.error( e, "Cannot save object " + object );
 		}

@@ -66,7 +66,7 @@ public class EclipseEditorService {
 	 */
 	public void openEditor(EditorModel editor, IWorkbenchPartSite site) {
 		try {
-			var reference = editor.getReference();
+			IEditorReference reference = editor.getReference();
 			site.getWorkbenchWindow().getActivePage().openEditor( reference.getEditorInput(), reference.getId() );
 		} catch( Exception e ) {
 			log.error( e, "Could not open editor: %s", editor.getName() );

@@ -85,7 +85,7 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
 		@Override
 		public StyledString getStyledText(Object element) {
-			var editor = (EditorModel) element;
+		    EditorModel editor = (EditorModel) element;
 			EditorLabelData editorLabelData = editorToLabelDataMap.get( editor );
 
 			if( editorLabelData == null ) {
@@ -121,7 +121,7 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 		}
 
 		private static Styler getPinnedColorStyler() {
-			var styler = new Styler() {
+			Styler styler = new Styler() {
 				@Override
 				public void applyStyles(TextStyle textStyle) {
 					// Add or update the color in the registry.
