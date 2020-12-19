@@ -27,6 +27,7 @@ import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.ui.EditorTableView.IEditorTableViewPresenter;
 import com.deepnoodle.openeditors.utils.MapUtils;
 import com.deepnoodle.openeditors.utils.PathUtils;
+import com.deepnoodle.openeditors.utils.StringUtils;
 
 class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 
@@ -167,9 +168,11 @@ class EditorViewLabelProvider extends DelegatingStyledCellLabelProvider {
 				} else {
 					Map<EditorModel, IPath> editorToFolderMap = new HashMap<>();
 					editorsWithSameName.forEach( (editor) -> {
-						IPath file = new Path( editor.getFilePath() );
-						IPath folder = PathUtils.getParentPath( file );
-						editorToFolderMap.put( editor, folder );
+						if (!StringUtils.isNullOrEmpty( editor.getFilePath()) ) {
+							IPath file = new Path( editor.getFilePath() );
+							IPath folder = PathUtils.getParentPath( file );
+							editorToFolderMap.put( editor, folder );
+						}
 					} );
 					Map<EditorModel, IPath> editorToSuffixMap = uniqueFolderSuffixes( editorToFolderMap );
 					Map<EditorModel, IPath> editorToPrefixMap = abbreviateFolderSuffixes( editorToSuffixMap );
