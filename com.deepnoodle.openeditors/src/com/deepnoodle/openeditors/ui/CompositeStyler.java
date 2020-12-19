@@ -19,7 +19,7 @@ public class CompositeStyler extends Styler {
 
 	@Override
 	public void applyStyles(TextStyle textStyle) {
-		for( var styler : stylers ) {
+		for( Styler styler : stylers ) {
 			styler.applyStyles( textStyle );
 		}
 	}

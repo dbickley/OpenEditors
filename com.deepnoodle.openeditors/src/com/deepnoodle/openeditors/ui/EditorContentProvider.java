@@ -1,7 +1,10 @@
 package com.deepnoodle.openeditors.ui;
 
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 
+import com.deepnoodle.openeditors.models.EditorModel;
 import com.deepnoodle.openeditors.ui.EditorTableView.IEditorTableViewPresenter;
 
 public class EditorContentProvider implements IStructuredContentProvider {
@@ -14,7 +17,7 @@ public class EditorContentProvider implements IStructuredContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		var editors = presenter.getSortedEditors();
+	    List<EditorModel> editors = presenter.getSortedEditors();
 		return editors.toArray();
 	}
 }

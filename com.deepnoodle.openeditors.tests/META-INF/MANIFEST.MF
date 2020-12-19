@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.junit,
  org.opentest4j,
  com.deepnoodle.openeditors
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.deepnoodle.openeditors.tests
 Bundle-ActivationPolicy: lazy

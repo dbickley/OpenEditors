@@ -20,7 +20,7 @@ public class EditorComparator implements Comparator<EditorModel> {
 	public int compare(EditorModel editor1, EditorModel editor2) {
 		int compare = Boolean.compare( editor2.isPinned(), editor1.isPinned() );
 		if( compare == 0 ) {
-			for( var sortType : sortSequence ) {
+			for( SortType sortType : sortSequence ) {
 				compare = compare( editor1, editor2, sortType );
 				if( compare != 0 ) {
 					return compare;
@@ -58,16 +58,16 @@ public class EditorComparator implements Comparator<EditorModel> {
 		case NATURAL :
 			return compare( editor1.getNaturalPosition(), editor2.getNaturalPosition() );
 		case NAME :
-			var name1 = StringUtils.nullToEmpty( editor1.getName() ).toLowerCase();
-			var name2 = StringUtils.nullToEmpty( editor2.getName() ).toLowerCase();
+			String name1 = StringUtils.nullToEmpty( editor1.getName() ).toLowerCase();
+			String name2 = StringUtils.nullToEmpty( editor2.getName() ).toLowerCase();
 			return compare( name1, name2 );
 		case PATH :
-			var filePath1 = StringUtils.nullToEmpty( editor1.getFilePath() ).toLowerCase();
-			var filePath2 = StringUtils.nullToEmpty( editor2.getFilePath() ).toLowerCase();
+			String filePath1 = StringUtils.nullToEmpty( editor1.getFilePath() ).toLowerCase();
+			String filePath2 = StringUtils.nullToEmpty( editor2.getFilePath() ).toLowerCase();
 			return compare( filePath1, filePath2 );
 		case EXTENSION :
-			var fileExtension1 = StringUtils.nullToEmpty( editor1.getFileExtension() ).toLowerCase();
-			var fileExtension2 = StringUtils.nullToEmpty( editor2.getFileExtension() ).toLowerCase();
+			String fileExtension1 = StringUtils.nullToEmpty( editor1.getFileExtension() ).toLowerCase();
+			String fileExtension2 = StringUtils.nullToEmpty( editor2.getFileExtension() ).toLowerCase();
 			return compare( fileExtension1, fileExtension2 );
 		default :
 			return 0;
